@@ -1,0 +1,64 @@
+﻿CREATE TABLE [dbo].[tVATRule] (
+	[Id]		uniqueidentifier	NOT NULL PRIMARY KEY NONCLUSTERED,
+	[IdMigrate]	uniqueidentifier	NULL,
+	[DateCreated]	datetime2	DEFAULT (sysutcdatetime()) NOT NULL,
+	[DateUpdated]	datetime2	NULL,
+	[idClient]		uniqueidentifier	NOT NULL,
+	[idAccountVATInput]	uniqueidentifier	NOT NULL,
+	[idAccountVATOutput]	uniqueidentifier	NOT NULL,
+	[idAccountVATBalance]	uniqueidentifier	NULL,
+	[VATRuleCode]	nvarchar(5)	NULL,
+	[TitleVATRule]	nvarchar(50)	NOT NULL,
+	[RateCurrent]	float	NOT NULL,
+	[SettlementTerm]	int	NOT NULL,
+	[DateRateChange]	datetime2	NULL,
+	[RateFuture]	float	NULL,
+	[FlagReverseCharge]	bit	DEFAULT(0)	NOT NULL,
+);
+GO
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idClient]
+FOREIGN Key([idClient])
+REFERENCES [dbo].[tClient] ([Id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATInput]
+FOREIGN Key([idAccountVATInput])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION
+GO
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATOutput]
+FOREIGN Key([idAccountVATOutput])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION
+GO
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATBalance]
+FOREIGN Key([idAccountVATBalance])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_tVATRule_Code] ON [dbo].[tVATRule]
+(
+	[idClient] ASC,
+	[VATRuleCode] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_tVATRule_idAccountVATInput] ON [dbo].[tVATRule]
+(
+	[idAccountVATInput] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_tVATRule_idAccountVATOutput] ON [dbo].[tVATRule]
+(
+	[idAccountVATOutput] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_tVATRule_iAccountVATBalance] ON [dbo].[tVATRule]
+(
+	[idAccountVATBalance] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE TRIGGER [TR_UPD_tVATRule] ON [dbo].[tVATRule] AFTER INSERT, UPDATE, DELETE AS BEGIN UPDATE [dbo].[tVATRule] SET [dbo].[tVATRule].[DateUpdated] = SYSUTCDATETIME() FROM INSERTED WHERE inserted.[Id] = [dbo].[tVATRule].[Id] END

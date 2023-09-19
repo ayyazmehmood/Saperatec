@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VerumBusinessObjects.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Einstellung" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VerumDBConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;ConnectionString&gt;Data Source = SAP-26\\SQLEXPRESS; Initial Catalog = VerumDBTest; Integrated Security = True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source = SAP-26\\SQLEXPRESS; Initial Catalog = VerumDBTest; Integrated Security = True</Value>
+    </Setting>
+    <Setting Name="AzureClientId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">f7c847da-18a7-41ee-a04c-8c4d57ae29cf</Value>
+    </Setting>
+    <Setting Name="AzureSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YOD8Q~oFLz.0RzzJUbPakKFcsv5c6Asob-A8oaPZ</Value>
+    </Setting>
+    <Setting Name="AzureTenantId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">7b529929-46de-4b14-8cec-8d0d154e2f0a</Value>
+    </Setting>
+    <Setting Name="MicrosoftLoginUrlToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://login.microsoftonline.com/{TenantId}/oauth2/v2.0/token</Value>
+    </Setting>
+    <Setting Name="Dynamic365BCCompanyDataUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.businesscentral.dynamics.com/v2.0/{TenantId}/{Environment}/ODataV4/Company('{CompanyName}')/{EndPoint}</Value>
+    </Setting>
+    <Setting Name="DBConnectionProduction" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumProd;Persist Security Info=False;User ID=azureadmin;Password=
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=120;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

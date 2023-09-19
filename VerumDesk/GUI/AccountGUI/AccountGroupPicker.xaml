@@ -1,0 +1,65 @@
+﻿<Window x:Class="VerumDesk.GUI.AccountGUI.AccountGroupPicker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI.AccountGUI"
+        mc:Ignorable="d"
+        Title="AccountPicker" Height="300" Width="600">
+
+    <StackPanel Margin="0,30,0,-47">
+        <Grid Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Label HorizontalAlignment="Right" Margin="0,5,10,10">Sektion:</Label>
+            <ComboBox Name="cbSection" Margin="0,5,50,10"  Grid.Column="1" Grid.ColumnSpan="2"
+                                  IsEditable="True" IsTextSearchEnabled="True" 
+                                  SelectionChanged="cbSection_SelectionChanged" 
+                                  IsEnabled="True">
+            </ComboBox>
+        </Grid>
+
+        <Grid Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Label Name="lbMainGroup" HorizontalAlignment="Right" Margin="0,5,10,10">Hauptgruppe:</Label>
+            <ComboBox Name="cbMainGroup" Margin="0,5,50,10"  Grid.Column="1" Grid.ColumnSpan="2"
+                                  IsEditable="True" IsTextSearchEnabled="True" 
+                                  SelectionChanged="cbMainGroup_SelectionChanged" 
+                                  IsEnabled="False">
+            </ComboBox>
+        </Grid>
+
+        <Grid Margin="10,0,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Label Name="lbGroup" HorizontalAlignment="Right" Margin="0,5,10,10">Gruppe:</Label>
+            <ComboBox Name="cbGroup" Margin="0,5,50,10"  Grid.Column="1" Grid.ColumnSpan="2"
+                                  IsEditable="True" IsTextSearchEnabled="True" 
+                                  SelectionChanged="cbGroup_SelectionChanged" 
+                                  IsEnabled="False">
+            </ComboBox>
+        </Grid>
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button x:Name="cmdOK" IsDefault="True" Content="Speichern" Click="cmdOK_Click" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="132" Padding="1,5" FontWeight="Bold"/>
+            <Button x:Name="cmdCancel" IsCancel="True" Content="Abbruch" Click="cmdCancel_Click" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Width="132" Padding="1,5"/>
+        </Grid>
+    </StackPanel>
+</Window>

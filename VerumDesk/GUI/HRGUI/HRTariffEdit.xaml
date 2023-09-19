@@ -1,0 +1,104 @@
+﻿<Window x:Class="VerumDesk.GUI.HRTariffEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        mc:Ignorable="d"
+        Title="Tarif bearbeiten ..." Height="450" Width="1000">
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel Name="spTitle" Orientation="Horizontal">
+                <Label HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right"
+                       Margin="2,2,2,2" Width="120" Content="Titel:" />
+                <TextBox Name="tbTitle" IsEnabled="True" 
+                     Margin="0,5,0,10" Width="300" VerticalContentAlignment="Center" 
+                     Text="{Binding TitleTariff}" />
+                <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="60" Content="geteilt:" />
+                <CheckBox Name="chkFlagShared"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                              IsChecked="{Binding FlagShared}"
+                              Checked="chkFlagShared_Checked" Unchecked="chkFlagShared_Unchecked"/>
+            </StackPanel>
+
+            <StackPanel Name="spAccount" Orientation="Horizontal">
+                <Label HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="2,2,2,2" Width="120">Gehaltskonto:</Label>
+                <Button Name="btnAccountSelect" 
+                                Margin="2,2,2,2" 
+                                Content="Auswählen"
+                                Click="btnAccountSelect_Click" IsEnabled="False"/>
+
+                <wpfTool:IntegerUpDown Name="tbAccountCode" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False" 
+                                               ValueChanged="tbAccountCode_ValueChanged"/>
+                <Label Name="lbAccountTitle" />
+            </StackPanel>
+
+            <StackPanel Name="spPayDay" Orientation="Horizontal">
+                <Label HorizontalAlignment="Right" VerticalAlignment="Center" HorizontalContentAlignment="Right"
+                       Margin="2,2,2,2" Width="120" Content="Zahltag:" />
+                <wpfTool:IntegerUpDown  Name="tbPerpetualRate" 
+                                       VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                       ShowButtonSpinner="False"
+                                       Value="{Binding PayDay}"/>
+                <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Inflation Basisdatum:" />
+                <DatePicker Name="dpDateInflationBase" 
+                            VerticalContentAlignment="Center" Margin="2,2,2,2" HorizontalContentAlignment="Left" 
+                            SelectedDate="{Binding DateInflationBase}" />
+            </StackPanel>
+
+            <StackPanel Name="spTariffDescription" Orientation="Horizontal">
+                <Label HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="2,2,2,2" Width="120">Beschreibung:</Label>
+                <TextBox Margin="2,2,2,2" Width="600" Text="{Binding TariffDescription}" Height="52"/>
+            </StackPanel>
+
+            <Separator />
+            <Label Content="Tarifdetails" FontWeight="Bold" Margin="10,0,0,0" />
+            <StackPanel Name="spDetailGrid" Orientation="Horizontal" Height="180">
+                <StackPanel.Resources>
+                    <DataTemplate x:Key="EditingDateTemplate">
+                        <DatePicker SelectedDate="{Binding DateValidTo}"  />
+                    </DataTemplate>
+                </StackPanel.Resources>
+                
+                <DataGrid Name="dgDetails" Margin="10,0,10,10" AutoGenerateColumns="False" 
+                                  IsReadOnly="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserAddRows="False">
+
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn x:Name="colDateValidTo" CellTemplate="{StaticResource EditingDateTemplate}" Header="Gültig bis" Width="200" />
+                        <DataGridTextColumn x:Name="colBaseSalaryMonthly" Header="Monatsgehalt" Width="90" Binding="{Binding BaseSalaryMonthly}" />
+                        <DataGridTextColumn x:Name="colFTEFactor" Header="Teilzeitfaktor" Width="80" Binding="{Binding FTEFactor}" />
+                        <DataGridTextColumn x:Name="colAnnualLeave" Header="Jahresurlaub" Width="80" Binding="{Binding AnnualLeave}" />
+                        <DataGridTextColumn x:Name="colRateAnnualBonus" Header="Bonusquote" Width="80" Binding="{Binding RateAnnualBonus}" />
+                        <DataGridTextColumn x:Name="colAnnualBonusMonth" Header="Bonusmonat" Width="80" Binding="{Binding AnnualBonusMonth}" />
+                        <DataGridTextColumn x:Name="colWorkTimeWeekly" Header="Arbeitszeit" Width="80" Binding="{Binding WorkTimeWeekly}" />
+                        <DataGridTextColumn x:Name="colStandardHolidays" Header="Feiertage" Width="80" Binding="{Binding StandardHolidays}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <Button x:Name="cmdDetailEdit" IsDefault="False" Content="Bearbeiten" Click="cmdDetailEdit_Click" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="132" Padding="1,5" FontWeight="Bold"/>
+                    <Button x:Name="cmdDetailNew" IsDefault="False" Content="Neu" Click="cmdDetailNew_Click" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="132" Padding="1,5" />
+                    <Button x:Name="cmdDetailDelete" IsDefault="False" Content="Löschen" Click="cmdDetailDelete_Click" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="132" Padding="1,5" />
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid DockPanel.Dock="Bottom" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button x:Name="cmdOK" IsDefault="True" Content="Speichern" Click="cmdOK_Click" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Width="132" Padding="1,5" FontWeight="Bold"/>
+            <Button x:Name="cmdCancel" IsCancel="True" Content="Abbruch" Click="cmdCancel_Click" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Width="132" Padding="1,5"/>
+        </Grid>
+
+    </DockPanel>
+</Window>

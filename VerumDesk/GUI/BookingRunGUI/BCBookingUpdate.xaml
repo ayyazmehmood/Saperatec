@@ -1,0 +1,41 @@
+﻿<Window x:Class="VerumDesk.GUI.BookingRunGUI.BCBookingUpdate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI.BookingRunGUI"
+        mc:Ignorable="d"
+        Title="BCBookingUpdate" Height="245" Width="500">
+    <DockPanel Margin="10">
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0" Height="38">
+            <!--<Button Name="btnDelete" Click="btnDelete_Click">Löschen</Button>-->
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,20,0" Height="89">
+            <Grid Width="458">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" HorizontalAlignment="Center" Content="Business Center Url" Margin="0,0,0,-2" Grid.RowSpan="2" />
+                <TextBox Grid.Row="1" Name="txtBCUrl" HorizontalAlignment="Center" Width="410" Margin="0,28,0,-35"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0" Height="80">
+            <Grid Width="458">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="0" Name="btnSaveUrl" Margin="69,2,286,-37" Click="btnSaveUrl_Click">Save Url</Button>
+                <Button Grid.Row="0" Grid.Column="0" Name="btnRunUrl" Margin="279,2,69,-37" Click="btnRunUrl_Click">Run Url</Button>
+            </Grid>
+        </StackPanel>
+
+    </DockPanel>
+</Window>

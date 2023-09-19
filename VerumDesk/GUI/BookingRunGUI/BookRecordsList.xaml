@@ -1,0 +1,42 @@
+﻿<Window x:Class="VerumDesk.GUI.BookRecordList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI" 
+        mc:Ignorable="d"
+        Title="Konten" Height="450" Width="800">
+
+
+    <Window.Resources>
+        <local:TypeAcccountConverter x:Key="enumConverter"></local:TypeAcccountConverter>
+    </Window.Resources>
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0">
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,10,0">
+            <!--<TextBox Margin="10,0,0,0" BorderThickness="0">Titel:</TextBox>
+            <TextBox Name="tbFilter" TextChanged="tbFilter_TextChanged" Margin="10,0,0,0" Height="20" Width="290" RenderTransformOrigin="0.489,0.814" ></TextBox>
+            <CheckBox IsThreeState="True" Name="cbPlan" Content="Für Planung" Margin="10,0,0,0" Click="cbPlan_Click" IsChecked="{x:Null}"></CheckBox>-->
+        </StackPanel>
+        <DataGrid Name="dgMain" Margin="10,10,10,10" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <!--<EventSetter Event="MouseDoubleClick" Handler="btnOpen_Click"/>-->
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colCostCenterCode" Header="Kosenstelle" Width="150" Binding="{Binding CostCenterCode}"/>
+                <DataGridTextColumn x:Name="colTitleLocalBookRecord" Header="Buchungsdatum" Width="300" Binding="{Binding BookingDate}" />
+                <DataGridTextColumn x:Name="colTypeBookRecord" Header="Buchungstyp" Width="150" Binding="{Binding TypeBookRecord, Converter={StaticResource ResourceKey=enumConverter}}" />
+                <DataGridCheckBoxColumn x:Name="colFlagBaseline" Header="Baseline" Width="40" Binding="{Binding FlagBaseline}" />
+                <DataGridCheckBoxColumn x:Name="colFlagForecast" Header="Forecast" Width="40" Binding="{Binding FlagForecast}" />
+                <DataGridCheckBoxColumn x:Name="colFlagAccountOpening" Header="AccountOpening" Width="40" Binding="{Binding FlagAccountOpening}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

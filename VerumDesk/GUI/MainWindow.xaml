@@ -1,0 +1,101 @@
+﻿<Window x:Class="VerumDesk.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        xmlns:self="clr-namespace:VerumDesk"
+        mc:Ignorable="d"
+        Title="Verum Desk" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.CommandBindings>
+        <CommandBinding Command="self:VerumCommands.Exit"  CanExecute="ExitCommand_CanExecute" Executed="ExitCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.BookingRunImport"  CanExecute="BookingRunImportCommand_CanExecute" Executed="BookingRunImportCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.CostCenterList"  CanExecute="CostCenterListCommand_CanExecute" Executed="CostCenterListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.JobList"  CanExecute="JobListCommand_CanExecute" Executed="JobListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.PlanEdit"  CanExecute="PlanEditCommand_CanExecute" Executed="PlanEditCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.PlanImplement"  CanExecute="PlanImplementCommand_CanExecute" Executed="PlanImplementCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.UserAdmin"  CanExecute="UserAdminCommand_CanExecute" Executed="UserAdminCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.ReferenceCodeList"  CanExecute="ReferenceCodeListCommand_CanExecute" Executed="ReferenceCodeListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.ReferenceGroupList"  CanExecute="ReferenceGroupListCommand_CanExecute" Executed="ReferenceGroupListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.AccountList"  CanExecute="AccountListCommand_CanExecute" Executed="AccountListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.AccountGroupList"  CanExecute="AccountGroupListCommand_CanExecute" Executed="AccountGroupListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.AccountMainGroupList"  CanExecute="AccountMainGroupListCommand_CanExecute" Executed="AccountMainGroupListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.AccountSectionList"  CanExecute="AccountSectionListCommand_CanExecute" Executed="AccountSectionListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.BookingRunList"  CanExecute="BookingRunListCommand_CanExecute" Executed="BookingRunListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.DepreciationRuleList"  CanExecute="DepreciationRuleListCommand_CanExecute" Executed="DepreciationRuleListCommand_Executed" />
+        <CommandBinding Command="self:VerumCommands.PlanImport"  CanExecute="PlanImportCommand_CanExecute" Executed="PlanImportCommand_Executed" />
+    </Window.CommandBindings>
+    <Grid>
+        <!-- Header -->
+        <!--<Border Background="LightGray"  VerticalAlignment="Top">
+            --><!--<Button Command="self:VerumCommands.PlanEdit" VerticalAlignment="Top">_Plan bearbeiten</Button>--><!--
+            <Menu VerticalAlignment="Top">
+                --><!--<MenuItem Header="_Menu">
+                </MenuItem>--><!--
+
+                <MenuItem Command="self:VerumCommands.PlanEdit" Header="_Plan bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"  />
+                <MenuItem Command="self:VerumCommands.PlanImplement" Header="Planung aktualisieren" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.BookingRunImport" Header="Buchungen importieren" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.CostCenterList" Header="_Kostenstellen bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.ReferenceCodeList" Header="_Buchungsschlüssel bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.ReferenceGroupList" Header="_Buchungsschlüsselgruppen bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.DepreciationRuleList" Header="_Abschreibungsregeln bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.AccountList" Header="_Konten bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.AccountGroupList" Header="_Kontogruppen bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.AccountMainGroupList" Header="_Kontohauptgruppen bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.AccountSectionList" Header="_Kontosektionen bearbeiten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.BookingRunList" Header="_Buchungsimport" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False"  Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.UserAdmin" Header="Benutzer verwalten" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.JobList" Header="Jobs prüfen" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"/>
+                <MenuItem Command="self:VerumCommands.PlanImport" Header="Pläne Importieren" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"/>
+                --><!--<Separator />--><!--
+                <MenuItem Command="self:VerumCommands.Exit" Header="_Beenden" Padding="6,7,6,2" VerticalContentAlignment="Stretch" BorderBrush="#FF080707" Height="32" HorizontalContentAlignment="Stretch" UseLayoutRounding="False" Margin="2,2,2,2"/>
+            </Menu>
+        </Border>-->
+        <!-- Left-side Menu -->
+        <Border Background="White" Width="230" HorizontalAlignment="Left">
+            <StackPanel>
+                <!--<Button Content="Menu Item 3" Margin="3,0,1,-5"/>-->
+
+                <Button Command="self:VerumCommands.PlanEdit" Content="_Plan bearbeiten"  Margin="3,0,1,-0" Height="25" />
+                <Button Command="self:VerumCommands.PlanImplement" Content="Planung aktualisieren"  Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.BookingRunImport" Content="Buchungen importieren" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.CostCenterList" Content="_Kostenstellen bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.ReferenceCodeList" Content="_Buchungsschlüssel bearbeiten" Margin="3,0,1,-0"  Height="25"/>
+                <Button Command="self:VerumCommands.ReferenceGroupList" Content="_Buchungsschlüsselgruppen bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.DepreciationRuleList" Content="_Abschreibungsregeln bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.AccountList" Content="_Konten bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.AccountGroupList" Content="_Kontogruppen bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.AccountMainGroupList" Content="_Kontohauptgruppen bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.AccountSectionList" Content="_Kontosektionen bearbeiten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.BookingRunList" Content="_Buchungsimport" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.UserAdmin" Content="Benutzer verwalten" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.JobList" Content="Jobs prüfen" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.PlanImport" Content="Pläne Importieren" Margin="3,0,1,-0" Height="25"/>
+                <Button Command="self:VerumCommands.Exit" Content="_Beenden" Margin="3,0,1,-0" Height="25"/>
+            </StackPanel>
+        </Border>
+        <!-- Main Content Area -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!--<TextBlock Text="Main Content Goes Here" Margin="10"/>-->
+            <!-- Add your main content controls here -->
+        </StackPanel>
+
+        <!-- Footer -->
+        <Border Background="LightGray" Height="40" VerticalAlignment="Bottom">
+            <StatusBar DockPanel.Dock="Bottom" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <StatusBarItem>
+                    <Label Content="Verbleibende Updates:" FontSize="10" />
+                </StatusBarItem>
+                <StatusBarItem>
+                    <TextBlock Name="lblPlanImplementationProgress" FontSize="10"/>
+                </StatusBarItem>
+            </StatusBar>
+        </Border>
+    </Grid>
+</Window>

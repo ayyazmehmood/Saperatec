@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    
+    <section name="SqlAuthenticationProviders" type="System.Data.SqlClient.SqlAuthenticationProviderConfigurationSection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false"/>
+    <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+      <section name="VerumDesk.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false"/>
+    </sectionGroup>
+  </configSections>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.8"/>
+    </startup>
+    <SqlAuthenticationProviders>
+      <providers>
+        <add name="Active Directory Interactive" type="Microsoft.Azure.Services.AppAuthentication.SqlAppAuthenticationProvider, Microsoft.Azure.Services.AppAuthentication"/>
+      </providers>
+    </SqlAuthenticationProviders>
+    <entityFramework>
+        <providers>
+            <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"/>
+        </providers>
+    </entityFramework>
+    <userSettings>
+        <VerumDesk.Properties.Settings>
+            <setting name="DBConnectionProduction" serializeAs="String">
+                <value>Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumProd;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</value>
+            </setting>
+            <setting name="DBConnectionTest" serializeAs="String">
+                <value>Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumTest;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</value>
+            </setting>
+            <setting name="DBConnectionAlternative" serializeAs="String">
+                <value>Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumProd;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</value>
+            </setting>
+            <setting name="DBConnectionDevelop" serializeAs="String">
+                <value>Data Source = SAP-26\SQLEXPRESS; Initial Catalog = VerumDev; Integrated Security = True</value>
+            </setting>
+        </VerumDesk.Properties.Settings>
+    </userSettings>
+</configuration>

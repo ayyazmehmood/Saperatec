@@ -1,0 +1,310 @@
+﻿<Window x:Class="VerumDesk.GUI.PlanEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        mc:Ignorable="d"
+        Title="Plan bearbeiten" MinHeight="400">
+
+    <Window.Resources>
+        <local:TypePlanStatusConverter x:Key="TypePlanStatusConverter" />
+        <local:TypePlanElementConverter x:Key="TypePlanElementConverter" />
+        <local:TypePlanParameterConverter x:Key="TypePlanParameterConverter" />
+    </Window.Resources>
+
+    <DockPanel HorizontalAlignment="Left">
+        <StackPanel Name="TopButtonStrip" DockPanel.Dock="Top" Orientation="Horizontal" Margin="5" >
+            <Button Name="btnPlanUpdate" Click="btnPlanUpdate_Click">Aktualisieren</Button>
+            <Button Name="btnPlanToForecast" Click="btnPlanToForecast_Click">Forecast</Button>
+            <Button Name="btnPlanToBudget" Click="btnPlanToBudget_Click">Budgetieren</Button>
+            <Button Name="btnPlanCopy" Click="btnPlanCopy_Click">Kopieren</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+
+        <TabControl TabStripPlacement="Left" SelectionChanged="OnSelectionChanged" Margin="5,0">
+            <TabItem Name="General" Header="Allgemein" >
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal">
+                            <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="100">Titel des Plans:</Label>
+                            <TextBox Margin="2,2,2,2" Width="300" Text="{Binding TitlePlan}" />
+                        </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="100">ID des Plans:</Label>
+                        <TextBox Margin="2,2,2,2" Width="300" IsReadOnly="True" Text="{Binding IdString}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                            <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="100">Gültig von:</Label>
+                            <DatePicker HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Top"  
+                        SelectedDate="{Binding DateValidFrom, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+                            <Label HorizontalAlignment="Right" Margin="2,2,2,2">bis:</Label>
+                            <DatePicker HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Top"
+                        SelectedDate="{Binding DateValidTo, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Margin="2,2,2,2" Width="100">Status:</Label>
+                            <Label Margin="2,2,2,2" Content="{Binding TypeStatus, Converter={StaticResource TypePlanStatusConverter}}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="100">Budgetiert bis:</Label>
+                            <DatePicker HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Top" IsEnabled="False" 
+                                        SelectedDate="{Binding ApprovedTo, Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+                        </StackPanel>
+                    </StackPanel>
+            </TabItem>
+            <TabItem Name="Elements" Header="Elemente">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Margin="5,0" Name="btnElementEdit" Click="btnElementEdit_Click">Bearbeiten</Button>
+                        <Button Margin="5,0" Name="btnElementNew" Click="btnElementNew_Click">Neu</Button>
+                        <Button Margin="5,0" Name="btnElementDelete" Click="btnElementDelete_Click">Löschen</Button>
+                        <Button Margin="5,0" IsEnabled="False">Übernehmen</Button>
+                    </StackPanel>
+
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,10,0">
+                        <TextBox Margin="10,0,0,0" BorderThickness="0">Suche:</TextBox>
+                        <TextBox Name="tbFilter" TextChanged="tbFilter_TextChanged" Margin="10,0,0,0" Height="20" Width="290" RenderTransformOrigin="0.489,0.814" ></TextBox>
+                        <TextBox Name="tbCount" IsReadOnly="True" Margin="10,0,0,0" BorderThickness="0">Anzahl:</TextBox>
+                        <Button Name="btnFilterWithoutTransaction" Margin="10,0,0,0" Click="btnFilterWithoutTransaction_Click">Filtern</Button>
+                    </StackPanel>
+
+                    <ListView x:Name="lbElements" Margin="5" >
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="btnElementEdit_Click" />
+                            </Style>
+                        </ListView.Resources>
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="120" DisplayMemberBinding="{Binding TitlePlanGroup}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TitlePlanGroup" Click="lvListColumnHeader_Click">Gruppe</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding CostCenterCode}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="CostCenterCode" Click="lvListColumnHeader_Click">Kostenstelle</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding TypePlanElement, Converter={StaticResource TypePlanElementConverter}}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TypePlanElement" Click="lvListColumnHeader_Click">Typ</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Width="80" DisplayMemberBinding="{Binding ReferenceIDPlanElement}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="ReferenceIDPlanElement" Click="lvListColumnHeader_Click">Buchung-ID</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Width="80">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="UntilDate" Click="lvListColumnHeader_Click">Gültig bis</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}-{1}-{2}">
+                                                        <Binding Path="UntilDateYear" />
+                                                        <Binding Path="UntilDateMonth" />
+                                                        <Binding Path="UntilDateDay" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitlePlanElement}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TitlePlanElement" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem Name="Parameters" Header="Parameter">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Margin="5,0" Name="btnParameterEdit" Click="btnParameterEdit_Click">Bearbeiten</Button>
+                        <Button Margin="5,0" Name="btnParameterCreate" Click="btnParameterCreate_Click">Neu</Button>
+                        <Button Margin="5,0" IsEnabled="False">Löschen</Button>
+                    </StackPanel>
+
+                    <ListView x:Name="lbParameters" Margin="10" >
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="btnParameterEdit_Click" />
+                            </Style>
+                        </ListView.Resources>
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitlePlanParameter}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TitlePlanParameter" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding TypePlanParameter, Converter={StaticResource TypePlanParameterConverter}}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TypePlanParameter" Click="lvListColumnHeader_Click">Typ</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Name="Allocation" Header="Zahlungsplan">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,10,0">
+                        <TextBox Name="tbCountZahlungsplan" IsReadOnly="True" Margin="10,0,0,0" BorderThickness="0">Anzahl:</TextBox>
+                    </StackPanel>
+                    <ListView x:Name="lbAllocationSchedule" Margin="10">
+
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            </Style>
+                        </ListView.Resources>
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitleAllocationSchedule}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TitleAllocationSchedule" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem Name="Inflation" Header="Inflation">
+                <ListView x:Name="lbInflation" Margin="10" >
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitleInflationRule}">
+                                <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="TitleInflationRule" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="90" DisplayMemberBinding="{Binding InflationInterval}">
+                                <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="InflationInterval" Click="lvListColumnHeader_Click">Interval</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="90" DisplayMemberBinding="{Binding InflationRateAnnual}">
+                                <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="InflationRateAnnual" Click="lvListColumnHeader_Click">Rate</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                    </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Name="HRTariff" Header="HR-Tarife">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Margin="5,0" Name="btnHRTariffEdit" Click="btnHRTariffEdit_Click">Bearbeiten</Button>
+                        <Button Margin="5,0" Name="btnHRTariffNew" Click="btnHRTariffNew_Click">Neu</Button>
+                        <Button Margin="5,0" Name="btnHRTariffDelete" Click="btnHRTariffDelete_Click">Löschen</Button>
+                        <Button Margin="5,0" IsEnabled="False">Übernehmen</Button>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <TextBox Name="tbCountHR" IsReadOnly="True" Margin="10,10,0,0" BorderThickness="0">Anzahl:</TextBox>
+                    </StackPanel>
+                    <ListView x:Name="lbHRTariff" Margin="10" >
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                        </ListView.Resources>
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitleTariff}">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="TitleTariff" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+            </TabItem>
+            <TabItem Name="HRExpenses" Header="HR-Nebenkosten">
+                <ListView x:Name="lbHRExpenses" Margin="10" >
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="300" DisplayMemberBinding="{Binding TitleExpenseGroup}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="TitleTariff" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Name="ExchangeRates" Header="Wechselkurse">
+                <ListView x:Name="lbExchangeRates" Margin="10" >
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        </Style>
+                    </ListView.Resources>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="50" DisplayMemberBinding="{Binding Currency_Code}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Currency_Code" Click="lvListColumnHeader_Click">Code</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="150" DisplayMemberBinding="{Binding Currency_Title}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Currency_Title" Click="lvListColumnHeader_Click">Titel</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Date, StringFormat=dd-MM-yyyy}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Date" Click="lvListColumnHeader_Click">Datum</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn Width="80" DisplayMemberBinding="{Binding Rate}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Tag="Rate" Click="lvListColumnHeader_Click">Rate</GridViewColumnHeader>
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+
+</Window>

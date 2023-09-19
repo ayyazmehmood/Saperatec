@@ -1,0 +1,35 @@
+﻿<Window x:Class="VerumDesk.GUI.AccountSectionList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI" 
+        mc:Ignorable="d"
+        Title="Kontosektionen" Height="450" Width="800">
+
+
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0">
+            <Button Name="btnOpen" Margin="0,2,5,2" Click="btnOpen_Click">Bearbeiten</Button>
+            <Button Name="btnCreate" Click="btnCreate_Click">Erstellen</Button>
+            <Button Name="btnDelete" Click="btnDelete_Click">Löschen</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+        <DataGrid Name="dgMain" Margin="10,10,10,10" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="btnOpen_Click"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colTitleLocalMainGroup" Header="Titel" Width="80" Binding="{Binding TitleLocalSection}" />
+                <DataGridTextColumn x:Name="colTitleEnglishMainGroup" Header="Titel" Width="80" Binding="{Binding TitleEnglishSection}" />
+                <DataGridTextColumn x:Name="colMainGroupOrder" Header="Reihenfolge" Width="80" Binding="{Binding SectionOrder}"/>
+                <DataGridTextColumn x:Name="colTypeAccount" Header="Kontotyp" Width="80" Binding="{Binding TypeAccount}"/>
+                <!--<DataGridTextColumn x:Name="colidAccountReportingDefault" Header="Standard Buchungskonto" Width="300" Binding="{Binding idAccountReportingDefault}" />-->
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

@@ -1,0 +1,16 @@
+ALTER TABLE [dbo].[tPlan] ADD CONSTRAINT [FK_tPlan_idClient]
+FOREIGN Key([idClient])
+REFERENCES [dbo].[tClient] ([Id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+GO
+
+ALTER TABLE [dbo].[tPlan] ADD CONSTRAINT [FK_tPlan_idPlanBase]
+FOREIGN Key([idPlanBase])
+REFERENCES [dbo].[tPlan] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION 
+
+GO
+

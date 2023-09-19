@@ -1,0 +1,15 @@
+﻿<Window x:Class="VerumDesk.GUI.PlanGUI.AddRefCode"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI.PlanGUI"
+        mc:Ignorable="d"
+        Title="Buchungsschlüssel nicht vorhanden" Height="300" Width="400">
+    <Grid>
+        <Button Name="btnJa" Click="btnJa_Click" Content="Ja" HorizontalAlignment="Left" Height="40" Margin="22,197,0,0" VerticalAlignment="Top" Width="166"/>
+        <Button Name="btnAbbrechen" Click="btnAbbrechen_Click" Content="Abbrechen" HorizontalAlignment="Left" Height="40" Margin="205,197,0,0" VerticalAlignment="Top" Width="166"/>
+        <TextBlock Name="tbMessage" FontSize="15" HorizontalAlignment="Center" Height="111" Margin="0,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="316"><Run Language="de-de" Text=""/></TextBlock>
+
+    </Grid>
+</Window>

@@ -1,0 +1,543 @@
+﻿<Window x:Class="VerumDesk.GUI.PlanItemEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        mc:Ignorable="d"
+        Title="Planelement bearbeiten" Height="600" Width="900" Language="de-DE">
+
+        <Window.Resources>
+            <local:TypePlanStatusConverter x:Key="TypePlanStatusConverter" />
+            <local:TypePlanElementConverter x:Key="TypePlanElementConverter" />
+            <local:TypePlanParameterConverter x:Key="TypePlanParameterConverter" />
+            <local:BoolInvert x:Key="BoolInvert" />
+            <Style x:Key="CellRightAlign">
+                <Setter Property="Control.HorizontalAlignment"
+                Value="Right" />
+            </Style>
+    </Window.Resources>
+   
+    <DockPanel>
+
+        <StackPanel Name="TopButtonStrip" DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+            <Button Name="btnUpdate" Click="btnUpdate_Click">Buchen</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+            </StackPanel>
+
+        <TabControl TabStripPlacement="Left" SelectionChanged="TabControl_SelectionChanged" Margin="5,0">
+            <TabItem Name="tiElement" Header="Element" IsSelected="True">
+                <StackPanel DockPanel.Dock="Bottom">
+                    
+                    <StackPanel Name="spPlanGroup" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Plangruppe:</Label>
+                        <ComboBox Name="cbPlanGroup" 
+                                  Margin="2,2,2,2" Width="400" 
+                                  IsEditable="True" IsReadOnly="False"
+                                  SelectionChanged="cbPlanGroup_SelectionChanged" 
+                                  IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}">
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Name="spTitlePlanElement" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Titel:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" Text="{Binding TitlePlanElement}" IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spTypePlanElement" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Elementtyp:</Label>
+                        <TextBox Margin="2,2,2,2" Width="150" Text="{Binding TypePlanElement, Converter={StaticResource TypePlanElementConverter}}" IsEnabled="False" />
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="60">Gesperrt:</Label>
+                        <CheckBox Margin="2,2,2,2" VerticalAlignment="Center" IsChecked="{Binding ElementFlagBaseline}" IsEnabled="False"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spCostCenter" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Kostenstelle:</Label>
+                        <ComboBox Name="cbCostCenter" Margin="2,2,2,2" Width="400" 
+                                  IsEditable="True" IsTextSearchEnabled="True" 
+                                  SelectionChanged="cbCostCenter_SelectionChanged" 
+                                  IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}">
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Name="spReferenceIDPlanElement" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Buchungsschlüssel:</Label>
+                        <TextBox Margin="2,2,2,2" Width="200" Name="tbReferenceID" LostFocus="tbReferenceID_LostFocus" Text="{Binding ReferenceIDPlanElement}" IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Button Name="btnReferenceIDSelect" Click="btnReferenceIDSelect_Click" IsEnabled="True">Auswählen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spPlanElementDescription" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Beschreibung:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding PlanElementDescription}" Height="52" IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiInstance" Header="Allgemein">
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spValidFrom" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="0,2" Width="60">Gültig</Label>
+                        <Label HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="2,2,2,2" Width="60">ab:</Label>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Tag:</Label>
+                        <TextBox Margin="2,2,2,2" Width="30" Text="{Binding DueDateDay}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Monat:</Label>
+                        <TextBox Margin="2,2,2,2" Width="30" Text="{Binding DueDateMonth}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Jahr:</Label>
+                        <TextBox Margin="2,2,2,2" Width="50" Text="{Binding DueDateYear}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spValidTo" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="2,2,2,2" Width="120">bis:</Label>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Tag:</Label>
+                        <TextBox Margin="2,2,2,2" Width="30" Text="{Binding UntilDateDay}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Monat:</Label>
+                        <TextBox Margin="2,2,2,2" Width="30" Text="{Binding UntilDateMonth}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Jahr:</Label>
+                        <TextBox Margin="2,2,2,2" Width="50" Text="{Binding UntilDateYear}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spTrigger" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Trigger Datum:</Label>
+                        <CheckBox Name="chkTriggerEnable"  Margin="2,2,2,2" VerticalAlignment="Center" Checked="chkTriggerEnable_Checked" Unchecked="chkTriggerEnable_Unchecked" IsChecked="{Binding ElementFlagBaseline}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <ComboBox Name="cbTriggerDate" Margin="2,2,2,2" Width="300" SelectionChanged="cbTriggerDate_SelectionChanged" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="16" Height="16" Margin="0,2,5,2" Fill="{Binding TitlePlanParameter}"/>
+                                        <TextBlock Text="{Binding TitlePlanParameter}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Name="btnNewTriggerDate" Click="btnNewTriggerDate_Click" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}">Neu</Button>
+                        <Button Name="btnEditTriggerDate" Click="btnEditTriggerDate_Click">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spDateOffset" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Relativ:</Label>
+                        <CheckBox Margin="2,2,2,2" VerticalAlignment="Center" IsChecked="{Binding FlagDateOffset}" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="Auto">(Tag/Monat/Jahr werden zu Plan- oder Trigger Datum (vorrangig) addiert)</Label>
+                    </StackPanel>
+
+                    <StackPanel Name="spAssumptions" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Annahmen:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Assumptions}" Height="78" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spRevisions" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Änderungshistorie:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Revisions}" Height="104" IsEnabled="{Binding FlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiContract" Header="Vertrag" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spContractType" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Vertragsart:</Label>
+                        <RadioButton Name="rbContractSales" GroupName="rbContractType" Content="Vertrieb"
+                                     HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"
+                                     IsEnabled="False" />
+                        <RadioButton Name="rbContractPurchase" GroupName="rbContractType" Content="Einkauf"
+                                     HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2" 
+                                     IsEnabled="False"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spAccountMain" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Buchungskonto:</Label>
+                        <Button Name="btnAccountMainSelect" 
+                                Margin="2,2,2,2" 
+                                Content="Auswählen"
+                                Click="btnAccountMainSelect_Click" IsEnabled="False"/>
+                        
+                        <wpfTool:IntegerUpDown Name="tbAccountMainCode" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False" 
+                                               ValueChanged="tbAccountMainCode_ValueChanged"/>
+                        <Label Name="lbAccountMainTitle" />
+                    </StackPanel>
+
+                    <StackPanel Name="spRepeat" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Wiederholung:" />
+                        <ComboBox Name="cbRepeat" Margin="2,2,2,2" Width="100" 
+                                  SelectionChanged="cbRepeat_SelectionChanged" />
+                    </StackPanel>
+
+                    <StackPanel Name="spPreis" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Preis:</Label>
+                        <wpfTool:DoubleUpDown  Name="tbPrice" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding Price}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Content="x Einheiten:"/>
+                        <wpfTool:IntegerUpDown  Name="tbUnits" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding NumberOfUnits}"/>
+                        <Label Content="(Optional x Preisparameter 1 + 2 + Budgetreserve)" />
+                    </StackPanel>
+
+                    <StackPanel Name="spPaymentTerm" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Fälligkeit:"/>
+                        <wpfTool:IntegerUpDown  Name="tbPaymentTerm" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding PaymentTerm}"/>
+                        <Label Content=" Tage" />
+                    </StackPanel>
+
+                    <StackPanel Name="spVATRule" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Steuer:" />
+                        <CheckBox Name="chkVATRule"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkVATRule_Checked" Unchecked="chkVATRule_Unchecked"/>
+                        <ComboBox Name="cbVATRule" Margin="2,2,2,2" Width="400" 
+                                  SelectionChanged="cbVATRule_SelectionChanged"
+                                  IsEditable="True" IsReadOnly="False"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spInflationRule" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Inflation:</Label>
+                        <CheckBox Name="chkInflationEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkInflationEnable_Checked" Unchecked="chkInflationEnable_Unchecked"/>
+                        <ComboBox Name="cbInflation" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbInflation_SelectionChanged" />
+                        <Label Content="Referenzdatum"/>
+                        <DatePicker Name="dpPriceDate" 
+                                    VerticalContentAlignment="Center" Margin="2,2,2,2" HorizontalContentAlignment="Left" 
+                                    SelectedDate="{Binding PriceDate}" />
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiBooking" Header="Buchung" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spAccountDebit" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Konto Soll:</Label>
+                        <Button Name="btnAccountDebitSelect" 
+                                Margin="2,2,2,2" 
+                                Content="Auswählen"
+                                Click="btnAccountDebitSelect_Click" IsEnabled="False"/>
+
+                        <wpfTool:IntegerUpDown Name="tbAccountDebitCode" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False" 
+                                               ValueChanged="tbAccountDebitCode_ValueChanged"/>
+                        <Label Name="lbAccountDebitTitle" />
+                    </StackPanel>
+
+                    <StackPanel Name="spAccountCredit" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Konto Haben:</Label>
+                        <Button Name="btnAccountCreditSelect" 
+                                Margin="2,2,2,2" 
+                                Content="Auswählen" 
+                                Click="btnAccountCreditSelect_Click" IsEnabled="False"/>
+
+                        <wpfTool:IntegerUpDown Name="tbAccountCreditCode" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False" 
+                                               ValueChanged="tbAccountCreditCode_ValueChanged"/>
+                        <Label Name="lbAccountCreditTitle" />
+                    </StackPanel>
+
+                    <StackPanel Name="spRepeatBooking" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Wiederholung:" />
+                        <ComboBox Name="cbRepeatBooking" Margin="2,2,2,2" Width="100" 
+                                  SelectionChanged="cbRepeatBooking_SelectionChanged" />
+                    </StackPanel>
+
+                    <StackPanel Name="spAccountOpening" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Einbuchung:" />
+                        <CheckBox Name="chkAccountOpening" Margin="2,2,2,2" Width="100" IsChecked="{Binding FlagAccountOpening}" />
+                    </StackPanel>
+
+                    <StackPanel Name="spPriceBooking" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Preis:</Label>
+                        <wpfTool:DoubleUpDown  Name="tbPriceBooking" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding Price}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Content="x Einheiten:"/>
+                        <wpfTool:IntegerUpDown  Name="tbUnitsBooking" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding NumberOfUnits}"/>
+                        <Label Content="(Optional x Preisparameter 1 + 2 + Budgetreserve)" />
+                    </StackPanel>
+
+                    <StackPanel Name="spInflationRuleBooking" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Inflation:</Label>
+                        <CheckBox Name="chkInflationBookingEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkInflationBookingEnable_Checked" Unchecked="chkInflationBookingEnable_Unchecked"/>
+                        <ComboBox Name="cbInflationBooking" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbInflationBooking_SelectionChanged" />
+                        <Label Content="Referenzdatum"/>
+                        <DatePicker Name="dpPriceDateBooking" 
+                                    VerticalContentAlignment="Center" Margin="2,2,2,2" HorizontalContentAlignment="Left" 
+                                    SelectedDate="{Binding PriceDate}" />
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiElementHR" Header="HR" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spStaffName" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Mitarbeiter:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" Text="{Binding StaffName}" IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Name="spDepartment" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Abteilung:</Label>
+                        <TextBox Margin="2,2,2,2" Width="600" Text="{Binding Department}" IsEnabled="{Binding ElementFlagBaseline, Converter={StaticResource BoolInvert}}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spTariff" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Tarif:</Label>
+                        <ComboBox Name="cbTariff" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbTariff_SelectionChanged" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="16" Height="16" Margin="0,2,5,2" Fill="{Binding TitleTariff}"/>
+                                        <TextBlock Text="{Binding TitleTariff}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+
+
+                        <Button Name="btnNewTariff" Click="btnNewTariff_Click">Neu</Button>
+                        <Button Name="btnEditTariff" Click="btnEditTariff_Click">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spExpenseGroup" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Nebenkosten:</Label>
+                        <ComboBox Name="cbExpenseGroup" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbExpenseGroup_SelectionChanged" >
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="16" Height="16" Margin="0,2,5,2" Fill="{Binding TitleExpenseGroup}"/>
+                                        <TextBlock Text="{Binding TitleExpenseGroup}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+
+
+                        <Button Name="btnNewExpenseGroup" Click="btnNewExpenseGroup_Click">Neu</Button>
+                        <Button Name="btnEditExpenseGroup" Click="btnEditExpenseGroup_Click">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spInflationRuleHR" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Inflation:</Label>
+                        <CheckBox Name="chkInflationHREnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkInflationHREnable_Checked" Unchecked="chkInflationHREnable_Unchecked"/>
+                        <ComboBox Name="cbInflationHR" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbInflationHR_SelectionChanged" />
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiSchedule" Header="Zahlungsplan" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spScheduleSwitch" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Zahlungsplan:</Label>
+                        <CheckBox Name="chkScheduleEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkScheduleEnable_Checked" Unchecked="chkScheduleEnable_Unchecked"/>
+                    </StackPanel>
+                    <StackPanel Name="spAllocationSchedule" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Plan auswählen:</Label>
+                        <ComboBox Name="cbAllocationSchedule" Margin="2,2,2,2" Width="300" 
+                                  SelectionChanged="cbAllocationSchedule_SelectionChanged" />
+                        <Button Name="btnNewAllocationSchedule" Click="btnNewAllocationSchedule_Click">Neu</Button>
+                        <Button Name="btnEditAllocationSchedule" Click="btnEditAllocationSchedule_Click">Öffnen</Button>
+                        <Button Name="btnImportAllocationSchedule" Click="btnImportAllocationSchedule_Click">Importieren</Button>
+                    </StackPanel>
+
+                    <DockPanel Name="spScheduleGrid" HorizontalAlignment="Left" Height="400" >
+                        <DataGrid Name="dgSchedule" Margin="10,10,10,10" AutoGenerateColumns="False" 
+                                  IsReadOnly="False"
+                                  AddingNewItem="dgSchedule_AddingNewItem"
+                                  CanUserDeleteRows="True"
+                                  CommandManager.PreviewExecuted="dgSchedule_PreviewExecuted"
+                                  VerticalScrollBarVisibility="Auto">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="colOrderNum" Header="Position" Width="80" Binding="{Binding OrderNum}" />
+                                <DataGridTextColumn x:Name="colAmount" Header="Betrag"  Width="100" Binding="{Binding ItemRate, StringFormat ={}{0:C}}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiAdvance" Header="Anzahlung" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spAdvanceSwitch" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Anzahlung:</Label>
+                        <CheckBox Name="chkAdvanceEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkAdvanceEnable_Checked" Unchecked="chkAdvanceEnable_Unchecked"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spAccountAdvance" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Anzahlungskonto:</Label>
+                        <Button Name="btnAccountAdvanceSelect" 
+                                Margin="2,2,2,2" 
+                                Content="Auswählen"
+                                Click="btnAccountAdvanceSelect_Click" IsEnabled="False"/>
+
+                        <wpfTool:IntegerUpDown Name="tbAccountAdvanceCode" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False" 
+                                               ValueChanged="tbAccountAdvanceCode_ValueChanged"/>
+                        <Label Name="lbAccountAdvanceTitle" />
+                    </StackPanel>
+
+
+                    <StackPanel Name="spAdvanceDelay" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Verzögerung:"/>
+                        <wpfTool:IntegerUpDown  Name="tbAdvanceDelay" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding AdvanceDelay, Mode=TwoWay}"/>
+                        <Label Content=" Tage" />
+                    </StackPanel>
+
+
+                    <StackPanel Name="spAdvanceTrigger" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Trigger Datum:</Label>
+                        <CheckBox Name="chkAdvanceTriggerEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkAdvanceTriggerEnable_Checked" Unchecked="chkAdvanceTriggerEnable_Unchecked"/>
+                        <ComboBox Name="cbAdvanceTrigger" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbAdvanceTrigger_SelectionChanged" />
+                        <Button Name="btnNewAdvanceTrigger" Click="btnNewAdvanceTrigger_Click">Neu</Button>
+                        <Button Name="btnEditAdvanceTrigger" Click="btnEditAdvanceTrigger_Click">Öffnen</Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiDepreciation" Header="Abschreibung" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spDepreciationSwitch" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Abschreiben:</Label>
+                        <CheckBox Name="chkDepreciationEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkDepreciationEnable_Checked" Unchecked="chkDepreciationEnable_Unchecked"/>
+                    </StackPanel>
+                    <StackPanel Name="spDepreciationRule" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Regel:</Label>
+                        <ComboBox Name="cbDepreciationRule" Margin="2,2,2,2" Width="220" 
+                                  SelectionChanged="cbDepreciationRule_SelectionChanged" />
+                        <Button Name="btnNewDepreciationRule" Click="btnNewDepreciationRule_Click" Visibility="Collapsed">Neu</Button>
+                        <Button Name="btnEditDepreciationRule" Click="btnEditDepreciationRule_Click" Visibility="Collapsed">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spDepreciationStart" Orientation="Horizontal" Visibility="Collapsed">
+                        <Label HorizontalAlignment="Right" Margin="0,2" Width="60">Beginn</Label>
+                        <Label HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="2,2,2,2" Width="60">ab:</Label>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Tag:</Label>
+                        <TextBox Name="tbDepreciationStartDay" Margin="2,2,2,2" Width="30" Text="{Binding DepreciationStartDay}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Monat:</Label>
+                        <TextBox Name="tbDepreciationStartMonth" Margin="2,2,2,2" Width="30" Text="{Binding DepreciationStartMonth}"/>
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="50">Jahr:</Label>
+                        <TextBox Name="tbDepreciationStartYear" Margin="2,2,2,2" Width="50" Text="{Binding DepreciationStartYear}"/>
+                    </StackPanel>
+
+                    <StackPanel Name="spDepreciationDelay" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120" Content="Verzögerung:"/>
+                        <wpfTool:IntegerUpDown  Name="tbDepreciationDelay" 
+                                               VerticalContentAlignment="Center" Margin="2,2,2,2" Width="90" HorizontalContentAlignment="Left" 
+                                               ShowButtonSpinner="False"
+                                               Value="{Binding DepreciationDelay}"/>
+                        <Label Content=" Tage" />
+                    </StackPanel>
+
+                    <StackPanel Name="spDepreciationTrigger" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Trigger Datum:</Label>
+                        <CheckBox Name="chkDepreciationTriggerEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkDepreciationTriggerEnable_Checked" Unchecked="chkDepreciationTriggerEnable_Unchecked"/>
+                        <ComboBox Name="cbDepreciationTrigger" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbDepreciationTrigger_SelectionChanged" />
+
+                        <Button Name="btnNewDepreciationTrigger" Click="btnNewDepreciationTrigger_Click" >Neu</Button>
+                        <Button Name="btnEditDepreciationTrigger" Click="btnEditDepreciationTrigger_Click">Öffnen</Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiExtended" Header="Erweitert" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spPricePar1" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Preisparameter 1:</Label>
+                        <CheckBox Name="chkPricePar1Enable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkPricePar1Enable_Checked" Unchecked="chkPricePar1Enable_Unchecked"/>
+                        <ComboBox Name="cbPricePar1" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbPricePar1_SelectionChanged" />
+
+
+                        <Button Name="btnNewPricePar1" Click="btnNewPricePar1_Click">Neu</Button>
+                        <Button Name="btnEditPricePar1" Click="btnEditPricePar1_Click">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spPricePar2" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Preisparameter 2:</Label>
+                        <CheckBox Name="chkPricePar2Enable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkPricePar2Enable_Checked" Unchecked="chkPricePar2Enable_Unchecked"/>
+                        <ComboBox Name="cbPricePar2" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbPricePar2_SelectionChanged" />
+                        <Button Name="btnNewPricePar2" Click="btnNewPricePar2_Click">Neu</Button>
+                        <Button Name="btnEditPricePar2" Click="btnEditPricePar2_Click">Öffnen</Button>
+                    </StackPanel>
+
+                    <StackPanel Name="spContingency" Orientation="Horizontal">
+                        <Label HorizontalAlignment="Right" Margin="2,2,2,2" Width="120">Budgetreserve:</Label>
+                        <CheckBox Name="chkContingencyEnable"  Margin="2,2,2,2" VerticalAlignment="Center" 
+                                  Checked="chkContingencyEnable_Checked" Unchecked="chkContingencyEnable_Unchecked"/>
+                        <ComboBox Name="cbContingency" Margin="2,2,2,2" Width="200" 
+                                  SelectionChanged="cbContingency_SelectionChanged" />
+                        <Button Name="btnNewContingency" Click="btnNewContingency_Click">Neu</Button>
+                        <Button Name="btnEditContigency" Click="btnEditContigency_Click">Öffnen</Button>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Name="tiTransactions" Header="Buchungen" >
+                <StackPanel DockPanel.Dock="Bottom">
+                    <StackPanel Name="spTransactionGrid" Orientation="Horizontal" Height="Auto">
+
+                        <DataGrid Name="dgTransactions" Margin="10,10,10,10" AutoGenerateColumns="False" 
+                                  IsReadOnly="True"
+                                  CanUserDeleteRows="False"
+                                  MaxHeight="500"
+                                  ScrollViewer.CanContentScroll="True" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                            
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="colDate" Header="Datum" Width="80" Binding="{Binding Path=BookingDate, ConverterCulture='de-DE', StringFormat=d}"/>
+                                <DataGridTextColumn x:Name="colAccount" Header="Konto" Width="80" Binding="{Binding AccountCodeReport}"/>
+                                <DataGridTextColumn x:Name="colCostCenter" Header="Kostenstelle" Width="100" Binding="{Binding CostCenterCode}"/>
+                                <DataGridTextColumn x:Name="colDebit" Header="Soll" Width="100" CellStyle="{StaticResource CellRightAlign}"
+                                                    Binding="{Binding Path=AmountDebit, ConverterCulture='de-DE', StringFormat=C}"/>
+                                <DataGridTextColumn x:Name="colCredit" Header="Haben" Width="100" CellStyle="{StaticResource CellRightAlign}"
+                                                    Binding="{Binding Path=AmountCredit, ConverterCulture='de-DE', StringFormat=C}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+
+    </DockPanel>
+
+</Window>

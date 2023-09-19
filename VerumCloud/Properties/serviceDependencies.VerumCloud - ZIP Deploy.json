@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "storage1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Storage/storageAccounts/sqlva2ttlgydeeaw7i",
+      "type": "storage.azure",
+      "connectionId": "AzureWebJobsStorage",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/saperatec01/databases/VerumProd",
+      "type": "mssql.azure",
+      "connectionId": "VerumDBProd",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/saperatec01/databases/VerumTest",
+      "type": "mssql.azure",
+      "connectionId": "VerumDBTest",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

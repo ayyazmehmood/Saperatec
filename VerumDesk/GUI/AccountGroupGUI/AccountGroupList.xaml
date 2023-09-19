@@ -1,0 +1,42 @@
+﻿<Window x:Class="VerumDesk.GUI.AccountGroupList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI" 
+        mc:Ignorable="d"
+        Title="Kontogruppen" Height="450" Width="800">
+
+
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0">
+            <Button Name="btnOpen" Margin="0,2,5,2" Click="btnOpen_Click">Bearbeiten</Button>
+            <Button Name="btnCreate" Click="btnCreate_Click">Erstellen</Button>
+            <Button Name="btnDelete" Click="btnDelete_Click">Löschen</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,10,0">
+            <TextBox Margin="10,0,0,0" BorderThickness="0">Sektion:</TextBox>
+            <ComboBox Name="cbSection" SelectionChanged="cbSection_SelectionChanged" Margin="10,0,0,0" Width="177"></ComboBox>
+            <TextBox Margin="10,0,0,0" BorderThickness="0">Hauptgruppe:</TextBox>
+            <ComboBox Name="cbMainGroup" SelectionChanged="cbMainGroup_SelectionChanged" Margin="10,0,0,0" Width="179"></ComboBox>
+        </StackPanel>
+        <DataGrid Name="dgMain" Margin="10,10,10,10" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="btnOpen_Click"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colTitleLocalAccountGroup" Header="Titel" Width="200" Binding="{Binding TitleLocalAccountGroup}" />
+                <!--<DataGridTextColumn x:Name="colTitleEnglishAccountGroup" Header="Titel" Width="80" Binding="{Binding TitleEnglishAccountGroup}" />-->
+                <DataGridTextColumn x:Name="colAccountSection" Header="Sektion" Width="80" Binding="{Binding AccountMainGroupParent.AccountSectionParent.TitleLocalSection}"/>
+                <DataGridTextColumn x:Name="colAccountMainGroup" Header="Hauptgruppe" Width="80" Binding="{Binding AccountMainGroupParent.TitleLocalMainGroup}"/>
+                <DataGridTextColumn x:Name="colAccountGroupOrder" Header="Reihenfolge" Width="80" Binding="{Binding AccountGroupOrder}"/>
+                <DataGridTextColumn x:Name="colAccountReportingDefault" Header="Standard Buchungskonto" Width="300" Binding="{Binding AccountReportingDefaultParent.TitleLocalAccount}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

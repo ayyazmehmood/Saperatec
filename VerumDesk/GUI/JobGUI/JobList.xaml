@@ -1,0 +1,40 @@
+﻿<Window x:Class="VerumDesk.GUI.Job.JobList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI.Job"
+        mc:Ignorable="d"
+        Title="Server Jobs" Height="600" Width="800">
+
+    <Window.Resources>
+        <local:TypeJobConverter x:Key="TypeJobConverter" />
+        <local:TypeJobSuccessConverter x:Key="TypeJobSuccessConverter" />
+    </Window.Resources>
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0">
+            <Button Name="btnOpen" Margin="0,2,5,2" Click="btnOpen_Click">Bearbeiten</Button>
+            <Button Name="btnDelete" Click="btnDelete_Click">Löschen</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+            <ComboBox Name="cbUser" Width="190" Margin="20,2,5,2"></ComboBox>
+            <ComboBox x:Name="cbStatus" Width="190"/>
+        </StackPanel>
+        <DataGrid Name="dgMain" Margin="10,10,10,10" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="btnOpen_Click"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colTypeJob" Header="Job Typ" Width="130" Binding="{Binding TypeJob, Converter={StaticResource TypeJobConverter }}" />
+                <DataGridTextColumn x:Name="colUser" Header="Benutzer" Width="100" Binding="{Binding idUser}" />
+                <DataGridTextColumn x:Name="colDateStart" Header="Datum" Width="80" Binding="{Binding DateJobStart, StringFormat=dd-MM-yyyy}"/>
+                <DataGridTextColumn x:Name="colTimeStart" Header="Beginn" Width="80" Binding="{Binding DateJobStart, StringFormat=hh:mm:ss}" />
+                <DataGridTextColumn x:Name="colTimeEnd" Header="Ende" Width="80" Binding="{Binding DateJobEnd, StringFormat=hh:mm:ss}" />
+                <DataGridTextColumn x:Name="colTypeJobSuccess" Header="Status" Width="100" Binding="{Binding TypeJobSuccess, Converter={StaticResource TypeJobSuccessConverter }}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

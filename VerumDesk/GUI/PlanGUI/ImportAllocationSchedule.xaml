@@ -1,0 +1,40 @@
+﻿<Window x:Class="VerumDesk.GUI.PlanGUI.ImportAllocationSchedule"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI.PlanGUI"
+        mc:Ignorable="d"
+        Title="ImportAllocationSchedule" Height="200" Width="450">
+    <Grid>
+        <Grid HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="2*"/>
+
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <Label Content="Import filename:" HorizontalAlignment="Right" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.ColumnSpan="2" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtFilename" Margin="20,6,9,0" Height="Auto" HorizontalAlignment="Stretch" Width="Auto" />
+                    <Button x:Name="cmdSelectFile" Click="btnSelectFile_Click"  Content="Auswählen" 
+                    HorizontalAlignment="Left" Grid.Column="1" MinWidth="80" />
+                </Grid>
+            </StackPanel>
+            <Button x:Name="btnImport" Click="btnImport_Click"  Content="Importieren" 
+                    HorizontalAlignment="Center" Grid.Column="1" MinWidth="80" Margin="0,39,0,39" Grid.Row="1" />
+
+        </Grid>
+    </Grid>
+</Window>

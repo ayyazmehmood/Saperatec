@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VerumDesk.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DBConnectionTest" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumTest;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</Value>
+    </Setting>
+    <Setting Name="DBConnectionAlternative" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumProd;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</Value>
+    </Setting>
+    <Setting Name="AzureClientId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">f7c847da-18a7-41ee-a04c-8c4d57ae29cf</Value>
+    </Setting>
+    <Setting Name="AzureSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YOD8Q~oFLz.0RzzJUbPakKFcsv5c6Asob-A8oaPZ</Value>
+    </Setting>
+    <Setting Name="AzureTenantId" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">7b529929-46de-4b14-8cec-8d0d154e2f0a</Value>
+    </Setting>
+    <Setting Name="MicrosoftLoginUrlToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://login.microsoftonline.com/{TenantId}/oauth2/v2.0/token</Value>
+    </Setting>
+    <Setting Name="Dynamic365BCCompanyDataUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.businesscentral.dynamics.com/v2.0/{TenantId}/{Environment}/ODataV4/Company('{CompanyName}')/{EndPoint}</Value>
+    </Setting>
+    <Setting Name="DBConnectionProduction" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumProd;Persist Security Info=False;User ID=azureadmin;Password=
+;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=120;</Value>
+    </Setting>
+    <Setting Name="DBConnectionDevelop" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source = TECHCOMPILER-35; Initial Catalog = VerumTest; Integrated Security = True</Value>
+    </Setting>
+    <Setting Name="VerumAPIBaseUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://localhost:7226</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

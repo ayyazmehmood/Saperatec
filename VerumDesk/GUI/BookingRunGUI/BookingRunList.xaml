@@ -1,0 +1,50 @@
+﻿<Window x:Class="VerumDesk.GUI.BookingRunList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        mc:Ignorable="d"
+        Title="Journale" Height="524" Width="1078">
+
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,10,0">
+            <!--<Button Name="btnDelete" Click="btnDelete_Click">Löschen</Button>-->
+            <Button Name="btnOpen" Click="btnOpen_Click">Öffnen</Button>
+            <Button Name="btnUpdate" Click="btnUpdate_Click">Update</Button>
+            <Button Name="btnImport" Click="btnImport_Click">Importieren</Button>
+            <Button Name="btnStatus" Click="btnStatus_Click">Status ändern</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,10,0">
+            <TextBox Margin="10,0,0,0" BorderThickness="0">Jahr:</TextBox>
+            <ComboBox Name="cbYear" Margin="10,0,0,0" Width="60" SelectionChanged="cbYear_SelectionChanged"/>
+            <TextBox Margin="10,0,0,0" BorderThickness="0">Monat:</TextBox>
+            <ComboBox Name="cbMonth" Margin="10,0,0,0" Width="60" SelectionChanged="cbMonth_SelectionChanged"/>
+            <CheckBox IsThreeState="True" Name="cbPreliminary" Content="Vorläufig" Margin="10,0,0,0" Click="cbPreliminary_Click" IsChecked="{x:Null}"></CheckBox>
+
+        </StackPanel>
+        <DataGrid Name="dgMain" Margin="10,10,10,10" AutoGenerateColumns="False" IsReadOnly="True" Height="402">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="btnOpen_Click"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colPeriodYear" Header="Jahr" Width="50" Binding="{Binding PeriodYear}" />
+                <DataGridTextColumn x:Name="colPeriodMonth" Header="Monat" Width="50" Binding="{Binding PeriodMonth}" />
+                <DataGridTextColumn x:Name="colSerialNum" Header="Nr." Width="40" Binding="{Binding SerialNum}" />
+                <DataGridTextColumn x:Name="colBookingRunTitle" Header="BookingRunTitle" Width="100" Binding="{Binding BookingRunTitle}" />
+                <DataGridCheckBoxColumn x:Name="colStatus" Header="Vorläufig" Width="80" Binding="{Binding StatusPreliminary}"/>
+                <DataGridTextColumn x:Name="colImportFileName" Header="Datainame" Width="100" Binding="{Binding ImportFileName}" />
+                <DataGridTextColumn x:Name="colImportFileDate" Header="Dateidatum" Width="100" Binding="{Binding ImportFileDate}" />
+                <DataGridTextColumn x:Name="colImportedDate" Header="Importdatum" Width="100" Binding="{Binding ImportedDate}" />
+                <DataGridTextColumn x:Name="colRecordsImported" Header="Importierte Datensätze" Width="150" Binding="{Binding RecordsImported}" />
+                <DataGridTextColumn x:Name="colRecordsOmitted" Header="Ausgelassene Datensätze" Width="150" Binding="{Binding RecordsOmitted}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+    
+</Window>

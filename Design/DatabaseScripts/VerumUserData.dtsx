@@ -1,0 +1,608 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="7/12/2020 7:50:37 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="THORNUNG"
+  DTS:CreatorName="THORNUNG\Thorsten"
+  DTS:Description="SSIS-Paketbeschreibung"
+  DTS:DTSID="{0D4A06DD-7AFB-483D-83C7-986DF7B91B37}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.92"
+  DTS:LocaleID="1031"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="VerumUserData"
+  DTS:VersionGUID="{03972A7C-9A73-4BA9-89FD-266F9F0DF0FA}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{C444B8B5-6CDB-40CB-AAD9-1BF2A478ABDA}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=THORNUNG\SQLEXPRESS;User ID=&quot;&quot;;Initial Catalog=VerumDB;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Persist Security Info=False;Initial File Name=&quot;&quot;;Server SPN=&quot;&quot;;Authentication=&quot;&quot;;Access Token=&quot;&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{487AA725-7B2B-4051-B815-245B5900F762}"
+      DTS:ObjectName="SourceConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=mysqlserver1726981181.database.windows.net;User ID=ThorstenHornung;Initial Catalog=VerumDBDev;Provider=MSOLEDBSQL;Persist Security Info=True;Initial File Name=&quot;&quot;;Server SPN=&quot;&quot;;Authentication=&quot;&quot;;Access Token=&quot;&quot;;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAPa3mcKFhVEybe70tOWBu1QAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAKfHHBPikZ/RqiVRiEsTtX6erUekyR6HiDcQQC91bk1AAAAAAOgAAAAAIAACAAAACD0juOJxsHjOvNpvICJKzuYhM2v6m/AC9nIbWvpFPhsCAAAADJ1rIXKianSxwGkpAWCViKgHkxTKcnoaXrwNiUFYM8YUAAAADGuAKc4qLDA93NLJK0Fk+ilRB9E/sXn+Uoeu0IU1i6vJ+CCoSR2E8xQvnyzwJvrzp6IuRIh8f+XqY4iEXs+TvN</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\1-Datenflusstask"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DTSID="{D0DFAD91-3586-43C4-A279-06573082F4D9}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="1-Datenflusstask"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\1-Datenflusstask\Quelle - tUser"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB-Quelle;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Alle Rechte vorbehalten; http://www.microsoft.com/sql/support;7"
+              description="OLE DB-Quelle"
+              name="Quelle - tUser"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Die Anzahl der Sekunden für das Timeout eines Befehls. Der Wert &quot;0&quot; zeigt einen unendlichen Timeoutwert an."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Gibt den Namen des zum Öffnen eines Rowsets verwendeten Datenbankobjekts an."
+                  name="OpenRowset">[dbo].[tUser]</property>
+                <property
+                  dataType="System.String"
+                  description="Gibt die Variable an, die den Namen des zum Öffnen eines Rowsets verwendeten Datenbankobjekts enthält."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Der auszuführende SQL-Befehl."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="Die Variable, die den auszuführenden SQL-Befehl enthält."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Gibt die zu verwendende Spaltencodepage an, wenn keine Codepageinformationen von der Datenquelle verfügbar sind."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Erzwingt die Verwendung des DefaultCodePage-Eigenschaftswerts beim Beschreiben von Zeichendaten."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Gibt den zum Zugreifen auf die Datenbank verwendeten Modus an."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="Die Zuordnungen zwischen den Parametern im SQL-Befehl und den Variablen."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\1-Datenflusstask\Quelle - tUser.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionOLEDB]"
+                  description="Die für den Zugriff auf die Datenbank verwendete OLE DB-Laufzeitverbindung."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle]"
+                  name="Ausgabe der OLE DB-Quelle">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[Id]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[Id]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[Id]"
+                      name="Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[IdMigrate]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[IdMigrate]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[IdMigrate]"
+                      name="IdMigrate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateCreated]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DateCreated]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateCreated]"
+                      name="DateCreated"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateUpdated]"
+                      dataType="dbTimeStamp2"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DateUpdated]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateUpdated]"
+                      name="DateUpdated"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserName]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserName]"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserName]"
+                      name="UserName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserLogin]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserLogin]"
+                      length="30"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserLogin]"
+                      name="UserLogin"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserPasswordHash]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserPasswordHash]"
+                      length="48"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserPasswordHash]"
+                      name="UserPasswordHash"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[idClientDefault]"
+                      dataType="guid"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[idClientDefault]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[idClientDefault]"
+                      name="idClientDefault"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[TypeUser]"
+                      dataType="i2"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[TypeUser]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[TypeUser]"
+                      name="TypeUser"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DATEVImportFolder]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DATEVImportFolder]"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DATEVImportFolder]"
+                      name="DATEVImportFolder"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DataImportFolder]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Konvertierung"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DataImportFolder]"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DataImportFolder]"
+                      name="DataImportFolder"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[Id]"
+                      dataType="guid"
+                      name="Id" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[IdMigrate]"
+                      dataType="i4"
+                      name="IdMigrate" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DateCreated]"
+                      dataType="dbTimeStamp2"
+                      name="DateCreated"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DateUpdated]"
+                      dataType="dbTimeStamp2"
+                      name="DateUpdated"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserName]"
+                      dataType="wstr"
+                      length="255"
+                      name="UserName" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserLogin]"
+                      dataType="wstr"
+                      length="30"
+                      name="UserLogin" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[UserPasswordHash]"
+                      dataType="wstr"
+                      length="48"
+                      name="UserPasswordHash" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[idClientDefault]"
+                      dataType="guid"
+                      name="idClientDefault" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[TypeUser]"
+                      dataType="i2"
+                      name="TypeUser" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DATEVImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      name="DATEVImportFolder" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].ExternalColumns[DataImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      name="DataImportFolder" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle]"
+                  isErrorOut="true"
+                  name="Fehlerausgabe der OLE DB-Quelle">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[Id]"
+                      dataType="guid"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[Id]"
+                      name="Id" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[IdMigrate]"
+                      dataType="i4"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[IdMigrate]"
+                      name="IdMigrate" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DateCreated]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DateCreated]"
+                      name="DateCreated"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DateUpdated]"
+                      dataType="dbTimeStamp2"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DateUpdated]"
+                      name="DateUpdated"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserName]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserName]"
+                      name="UserName" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserLogin]"
+                      dataType="wstr"
+                      length="30"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserLogin]"
+                      name="UserLogin" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserPasswordHash]"
+                      dataType="wstr"
+                      length="48"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[UserPasswordHash]"
+                      name="UserPasswordHash" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[idClientDefault]"
+                      dataType="guid"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[idClientDefault]"
+                      name="idClientDefault" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[TypeUser]"
+                      dataType="i2"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[TypeUser]"
+                      name="TypeUser" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DATEVImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DATEVImportFolder]"
+                      name="DATEVImportFolder" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DataImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[DataImportFolder]"
+                      name="DataImportFolder" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Fehlerausgabe der OLE DB-Quelle].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\1-Datenflusstask\Ziel - tUser"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB-Ziel;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Alle Rechte vorbehalten; http://www.microsoft.com/sql/support;4"
+              description="OLE DB-Ziel"
+              name="Ziel - tUser"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Die Anzahl der Sekunden für das Timeout eines Befehls. Der Wert &quot;0&quot; zeigt einen unendlichen Timeoutwert an."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Gibt den Namen des zum Öffnen eines Rowsets verwendeten Datenbankobjekts an."
+                  name="OpenRowset">[dbo].[tUser]</property>
+                <property
+                  dataType="System.String"
+                  description="Gibt die Variable an, die den Namen des zum Öffnen eines Rowsets verwendeten Datenbankobjekts enthält."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Der auszuführende SQL-Befehl."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Gibt die zu verwendende Spaltencodepage an, wenn keine Codepageinformationen von der Datenquelle verfügbar sind."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Erzwingt die Verwendung des DefaultCodePage-Eigenschaftswerts beim Beschreiben von Zeichendaten."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Gibt den zum Zugreifen auf die Datenbank verwendeten Modus an."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Zeigt an, ob die für Identitätsspalten übergebenen Werte zum Ziel kopiert werden. Bei &quot;False&quot; werden die Werte für Identitätsspalten am Ziel automatisch generiert. Trifft nur zu, wenn die Option &quot;Schnelles Laden&quot; aktiviert ist."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Zeigt an, ob für Spalten, die NULL enthalten, NULL am Ziel eingefügt wird. Bei &quot;False&quot; werden für Spalten, die NULL enthalten, am Ziel die Standardwerte eingefügt. Trifft nur zu, wenn die Option &quot;Schnelles Laden&quot; aktiviert ist."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Gibt die für die Option &quot;Schnelles Laden&quot; zu verwendenden Optionen an. Trifft nur zu, wenn die Option &quot;Schnelles Laden&quot; aktiviert ist."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Gibt an, wann beim Einfügen von Daten Commits ausgegeben werden. Der Wert &quot;0&quot; gibt an, dass ein Commit am Ende des Einfügens von Daten ausgegeben wird. Trifft nur zu, wenn die Option &quot;Schnelles Laden&quot; aktiviert ist."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\1-Datenflusstask\Ziel - tUser.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="Die für den Zugriff auf die Datenbank verwendete OLE DB-Laufzeitverbindung."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Einfügen"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[Id]"
+                      cachedDataType="guid"
+                      cachedName="Id"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[Id]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[Id]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[IdMigrate]"
+                      cachedDataType="i4"
+                      cachedName="IdMigrate"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[IdMigrate]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[IdMigrate]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[DateCreated]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="DateCreated"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DateCreated]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateCreated]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[DateUpdated]"
+                      cachedDataType="dbTimeStamp2"
+                      cachedName="DateUpdated"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DateUpdated]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DateUpdated]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[UserName]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="UserName"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserName]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserName]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[UserLogin]"
+                      cachedDataType="wstr"
+                      cachedLength="30"
+                      cachedName="UserLogin"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserLogin]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserLogin]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[UserPasswordHash]"
+                      cachedDataType="wstr"
+                      cachedLength="48"
+                      cachedName="UserPasswordHash"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserPasswordHash]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[UserPasswordHash]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[idClientDefault]"
+                      cachedDataType="guid"
+                      cachedName="idClientDefault"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[idClientDefault]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[idClientDefault]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[TypeUser]"
+                      cachedDataType="i2"
+                      cachedName="TypeUser"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[TypeUser]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[TypeUser]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[DATEVImportFolder]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DATEVImportFolder"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DATEVImportFolder]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DATEVImportFolder]" />
+                    <inputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].Columns[DataImportFolder]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="DataImportFolder"
+                      externalMetadataColumnId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DataImportFolder]"
+                      lineageId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle].Columns[DataImportFolder]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[Id]"
+                      dataType="guid"
+                      name="Id" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[IdMigrate]"
+                      dataType="i4"
+                      name="IdMigrate" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DateCreated]"
+                      dataType="dbTimeStamp2"
+                      name="DateCreated"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DateUpdated]"
+                      dataType="dbTimeStamp2"
+                      name="DateUpdated"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserName]"
+                      dataType="wstr"
+                      length="255"
+                      name="UserName" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserLogin]"
+                      dataType="wstr"
+                      length="30"
+                      name="UserLogin" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[UserPasswordHash]"
+                      dataType="wstr"
+                      length="48"
+                      name="UserPasswordHash" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[idClientDefault]"
+                      dataType="guid"
+                      name="idClientDefault" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[TypeUser]"
+                      dataType="i2"
+                      name="TypeUser" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DATEVImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      name="DATEVImportFolder" />
+                    <externalMetadataColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input].ExternalColumns[DataImportFolder]"
+                      dataType="wstr"
+                      length="255"
+                      name="DataImportFolder" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\1-Datenflusstask\Ziel - tUser.Outputs[Fehlerausgabe des OLE DB-Ziels]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Fehlerausgabe des OLE DB-Ziels"
+                  synchronousInputId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Outputs[Fehlerausgabe des OLE DB-Ziels].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\1-Datenflusstask\Ziel - tUser.Outputs[Fehlerausgabe des OLE DB-Ziels].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\1-Datenflusstask\Ziel - tUser.Outputs[Fehlerausgabe des OLE DB-Ziels].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\1-Datenflusstask\Ziel - tUser.Outputs[Fehlerausgabe des OLE DB-Ziels].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\1-Datenflusstask.Paths[Ausgabe der OLE DB-Quelle]"
+              endId="Package\1-Datenflusstask\Ziel - tUser.Inputs[Destination Input]"
+              name="Ausgabe der OLE DB-Quelle"
+              startId="Package\1-Datenflusstask\Quelle - tUser.Outputs[Ausgabe der OLE DB-Quelle]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+</DTS:Executable>

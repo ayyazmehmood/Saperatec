@@ -1,0 +1,36 @@
+﻿<Window x:Class="VerumDesk.GUI.UserAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VerumDesk.GUI"
+        mc:Ignorable="d"
+        Title="Benutzer verwalten" Height="400" Width="500">
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,0,0,0">
+            <Button Name="btnUserEdit" Click="btnUserEdit_Click">Bearbeiten</Button>
+            <Button Name="btnUserCreate" Click="btnUserCreate_Click">Erstellen</Button>
+            <Button Name="btnUserDelete" Click="btnUserDelete_Click">Löschen</Button>
+            <Button Name="btnClose" Click="btnClose_Click">Schließen</Button>
+        </StackPanel>
+        <ListView x:Name="lbUsers" Margin="10" >
+            <ListView.Resources>
+                <Style TargetType="{x:Type GridViewColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                </Style>
+            </ListView.Resources>
+
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="180" DisplayMemberBinding="{Binding UserName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="UserName" Click="lvUsersColumnHeader_Click">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+
+        </ListView>
+    </DockPanel>
+</Window>

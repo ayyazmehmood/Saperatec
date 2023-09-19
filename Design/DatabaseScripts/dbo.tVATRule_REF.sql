@@ -1,0 +1,32 @@
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idClient]
+FOREIGN Key([idClient])
+REFERENCES [dbo].[tClient] ([Id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+
+GO
+
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATInput]
+FOREIGN Key([idAccountVATInput])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION 
+
+GO
+
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATOutput]
+FOREIGN Key([idAccountVATOutput])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION 
+
+GO
+
+ALTER TABLE [dbo].[tVATRule] ADD CONSTRAINT [FK_tVATRule_idAccountVATBalance]
+FOREIGN Key([idAccountVATBalance])
+REFERENCES [dbo].[tAccount] ([Id])
+ON UPDATE NO ACTION 
+ON DELETE NO ACTION 
+
+GO
+

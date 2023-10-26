@@ -1442,6 +1442,12 @@ namespace VerumBusinessObjects
 
 			public int? BCGeneralLedgerPageAPIEntryNo{ get; set; }
 
+			[StringLength(250)]
+			public string ExternalDocumentNo{ get; set; }
+
+			[StringLength(250)]
+			public string Description{ get; set; }
+
 		}
 
 }

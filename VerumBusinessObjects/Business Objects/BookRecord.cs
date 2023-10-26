@@ -113,7 +113,7 @@
         /// <param name="accountCode">Code of the booking account</param>
         /// <param name="amount">Transaction amount. Negative numbers are booked as debit.</param>
         /// <returns></returns>
-        public bool AddTransaction(int accountCode, double credit, double debit, PlanElementInstance planElementInstance = null, bool flagAccountOpening = false, int? BCTransactionNo = null, int? BCGeneralLedgerPageAPIEntryNo = null)
+        public bool AddTransaction(int accountCode, double credit, double debit, PlanElementInstance planElementInstance = null, bool flagAccountOpening = false, int? BCTransactionNo = null, int? BCGeneralLedgerPageAPIEntryNo = null, string Description = "", string ExternalDocumentNo="")
         {
             // Transactions can only be added while a new book record is not yet comitted
             if (Bound) return false;
@@ -126,7 +126,7 @@
                 var acc = new Account();
                 acc.data = obj.First();
 
-                return AddTransaction(acc, credit, debit, planElementInstance, flagAccountOpening, BCTransactionNo: BCTransactionNo, BCGeneralLedgerPageAPIEntryNo: BCGeneralLedgerPageAPIEntryNo);
+                return AddTransaction(acc, credit, debit, planElementInstance, flagAccountOpening, BCTransactionNo: BCTransactionNo, BCGeneralLedgerPageAPIEntryNo: BCGeneralLedgerPageAPIEntryNo, Description, ExternalDocumentNo);
             }
         }
 
@@ -137,7 +137,7 @@
         /// <param name="accountId">Guid of the booking account</param>
         /// <param name="amount">Transaction amount. Negative numbers are booked as debit.</param>
         /// <returns></returns>
-        public bool AddTransaction(Account accountTx, double credit, double debit, PlanElementInstance planElementInstance = null, bool flagAccountOpening = false, int? BCTransactionNo = null, int? BCGeneralLedgerPageAPIEntryNo = null)
+        public bool AddTransaction(Account accountTx, double credit, double debit, PlanElementInstance planElementInstance = null, bool flagAccountOpening = false, int? BCTransactionNo = null, int? BCGeneralLedgerPageAPIEntryNo = null, string Description = "", string ExternalDocumentNo = "")
         {
             if (Bound) return false;
 
@@ -193,6 +193,9 @@
 
             if (BCGeneralLedgerPageAPIEntryNo != null)
                 tx.BCGeneralLedgerPageAPIEntryNo = BCGeneralLedgerPageAPIEntryNo;
+
+            tx.Description = Description;
+            tx.ExternalDocumentNo = ExternalDocumentNo;
 
             _BookTransactions.Add(tx);
             return true;

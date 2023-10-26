@@ -9673,6 +9673,10 @@ namespace VerumBusinessObjects
 		int? BCTransactionNo { get; set; }
 		[ComVisible(false)]
 		int? BCGeneralLedgerPageAPIEntryNo { get; set; }
+		[ComVisible(false)]
+		string ExternalDocumentNo { get; set; }
+		[ComVisible(false)]
+		string Description { get; set; }
 	}
 
 
@@ -10272,6 +10276,56 @@ namespace VerumBusinessObjects
 		}
 
 		partial void _BCGeneralLedgerPageAPIEntryNoValid( int? value, ref bool valid);
+
+		public string ExternalDocumentNo
+		{
+			get => _data.ExternalDocumentNo;
+			set
+			{
+				if (_data.ExternalDocumentNo == value) return;
+				bool valid = true;
+				_ExternalDocumentNoValid(value, ref valid);
+
+				if (valid)
+				{
+					if (value != null) {						var attr = (StringLengthAttribute)_data.GetType().GetProperty("ExternalDocumentNo").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+						if (value.Length > attr.MaximumLength)
+							value = value.Substring(0, attr.MaximumLength);
+					}
+					_data.ExternalDocumentNo = value;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _ExternalDocumentNoValid( string value, ref bool valid);
+
+		public string Description
+		{
+			get => _data.Description;
+			set
+			{
+				if (_data.Description == value) return;
+				bool valid = true;
+				_DescriptionValid(value, ref valid);
+
+				if (valid)
+				{
+					if (value != null) {						var attr = (StringLengthAttribute)_data.GetType().GetProperty("Description").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+						if (value.Length > attr.MaximumLength)
+							value = value.Substring(0, attr.MaximumLength);
+					}
+					_data.Description = value;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _DescriptionValid( string value, ref bool valid);
 
 	}
 

@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Drawing.Text;
 using System.Linq;
 using System.Net;
+using System.Security.Permissions;
 using System.Security.Policy;
 using System.Security.RightsManagement;
 using System.Text;
@@ -36,9 +37,9 @@ namespace VerumBusinessObjects
                 if (!job.StartJob(TypeJobEnum.BusinessCenterImport))
                     return BOResult.JobReportingError;
 
-                var query = resModel.value.Where(y => y.DocumentType == "Invoice" || y.DocumentType == "Credit Memo" || y.DocumentType == "Payment" || y.DocumentType.Trim() == "");
+                //var query = resModel.value.Where(y => y.DocumentType != "Invoice"  && ( y.DocumentType == "Credit Memo" || y.DocumentType == "Payment" || y.DocumentType.Trim() == ""));
+                var query = resModel.value.ToList(); 
                 var transactionnumber = query.OrderBy(x => x.LastModifiedDate).Select(x => x.Transaktionsnummer).Distinct().ToList<int>();
-
 
                 BookingRun bookingRun = null;
 
@@ -47,25 +48,24 @@ namespace VerumBusinessObjects
 
                 // get accoutcode from api list
                 var accoutCode = query.Select(x => x.GLAccountNo).Distinct().ToList<Int32>();
-                var accoutCode2 = query.Where(x=>!string.IsNullOrEmpty(x.SourceNo.Trim()) && x.SourceNo.ToLower() != "coba").Select(x => Convert.ToInt32(x.SourceNo)).Distinct().ToList<Int32>();
+                var accoutCode2 = query.Where(x => !string.IsNullOrEmpty(x.SourceNo.Trim()) && x.SourceNo.ToLower() != "coba").Select(x => Convert.ToInt32(x.SourceNo)).Distinct().ToList<Int32>();
                 var accoutCode3 = accoutCode.Concat(accoutCode2).Distinct();
 
                 // get already exist into database
                 var dbAccountCode = Account.GetAccountCode();
 
                 // save accout Code which are not exist into db
-                 NewAccount(accoutCode3.Where(x => !dbAccountCode.Contains(x)).ToList<Int32>(), ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
+                NewAccount(accoutCode3.Where(x => !dbAccountCode.Contains(x)).ToList<Int32>(), ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
 
                 // get updated accoutCode and id list from db
-                var dbAccountCodeUpdated =  Account.GetAccountCodeModels();
+                var dbAccountCodeUpdated = Account.GetAccountCodeModels();
 
                 var listCostCenter = CostCenter.GetCollection();
-                int recordsImported = 0,recordsOmitted = 0;
+                int recordsImported = 0, recordsOmitted = 0;
                 double VatAmountDr = 0d, VatAmountCr = 0d, AmountDr = 0d, AmountCr = 0d;
                 Guid? VatTranGuid = null;
-                
+
                 var alreadyExistTransactions = await BookRecord.GetBookRecordTransaction(transactionnumber).ToListAsync();
-                
 
                 List<tBookRecord> tBookRecords = new List<tBookRecord>();
                 List<tBookTransaction> tBookTransactions = new List<tBookTransaction>();
@@ -74,7 +74,7 @@ namespace VerumBusinessObjects
                 {
                     try
                     {
-                        
+
                         // check transaction number already exist..
                         var entry = resModel.value.Where(x => x.Transaktionsnummer == tran).OrderBy(x => x.EntryNo).ToList();
                         var listbook = new List<BookRecord>();
@@ -83,26 +83,27 @@ namespace VerumBusinessObjects
                         if (alreadyExistTransactions.Where(x => x.BCTransactionNo == tran).Count() > 0)
                         {
                             continue;
+
                             // Call API for get particular transaction list
                             var transactionEntry = await GetParticularTransactionEntry(tran, model);
                             entry = transactionEntry.value.Where(x => x.Transaktionsnummer == tran).OrderBy(x => x.EntryNo).ToList();
 
                             List<double> VatAmountList = entry.Where(x => !string.IsNullOrEmpty(x.GenPostingType) && x.VATAmount != 0).Select(x => x.VATAmount).ToList<double>();
-
-                            var mainAccountNumber = GetMainAccountEntries(entry, VatAmountList);
+                            var isInvoice = false;
+                            var mainAccountNumber = GetMainAccountEntries(entry, VatAmountList, out isInvoice);
 
                             // check Transaction is Payment Type Case 1
-                            if (entry.Where(x => x.DocumentType == "Payment").Count() == entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Count()
-                                && entry.Count() == 2)
-                            {
-                                mainAccountNumber = entry.OrderByDescending(x => x.EntryNo).ToList();
-                            }
-                            else if (entry.Where(x => !string.IsNullOrEmpty(x.GenPostingType.Trim()) &&
-                                                x.DocumentType == "Payment").Count() == entry.Count() &&
-                                    entry.Where(x => string.IsNullOrEmpty(x.SourceNo)).Count() == 1)
-                            {
-                                mainAccountNumber = entry.Where(x => string.IsNullOrEmpty(x.SourceNo)).OrderByDescending(x => x.EntryNo).ToList();
-                            }
+                            //if (entry.Where(x => x.DocumentType == "Payment").Count() == entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Count()
+                            //    && entry.Count() == 2)
+                            //{
+                            //    mainAccountNumber = entry.OrderByDescending(x => x.EntryNo).ToList();
+                            //}
+                            //else if (entry.Where(x => !string.IsNullOrEmpty(x.GenPostingType.Trim()) &&
+                            //                    x.DocumentType == "Payment").Count() == entry.Count() &&
+                            //        entry.Where(x => string.IsNullOrEmpty(x.SourceNo)).Count() == 1)
+                            //{
+                            //    mainAccountNumber = entry.Where(x => string.IsNullOrEmpty(x.SourceNo)).OrderByDescending(x => x.EntryNo).ToList();
+                            //}
 
                             if (mainAccountNumber.FirstOrDefault() == null)
                                 continue;
@@ -110,6 +111,9 @@ namespace VerumBusinessObjects
                             for (int i = 0; i < entry.Count(); i++)
                             {
                                 if (!(IsValidEntryCondition(entry, i, mainAccountNumber)))
+                                    continue;
+
+                                if (mainAccountNumber.FirstOrDefault().EntryNo == entry[i].EntryNo)
                                     continue;
 
                                 double TotalAmout = (entry[i].Amount + entry[i].VATAmount) < 0 ? -(entry[i].Amount + entry[i].VATAmount) : (entry[i].Amount + entry[i].VATAmount);
@@ -136,7 +140,7 @@ namespace VerumBusinessObjects
 
                                 if (TranGuid == Guid.Empty)
                                 {
-                                    var bookRecord = InsertBookRecord(ref entry, i, ref mainAccountNumber, ref listCostCenter, ref bookingRun, ref dbAccountCodeUpdated, ref job);
+                                    var bookRecord = InsertBookRecord(ref entry, i, ref mainAccountNumber, ref listCostCenter, ref bookingRun, ref dbAccountCodeUpdated, ref job, ref VatAmountList);
                                     listbook.Add(bookRecord);
                                 }
                                 else
@@ -148,30 +152,31 @@ namespace VerumBusinessObjects
                         else
                         {
                             List<double> VatAmountList = entry.Where(x => !string.IsNullOrEmpty(x.GenPostingType) && x.VATAmount != 0).Select(x => x.VATAmount).ToList<double>();
-                            var mainAccountNumber = GetMainAccountEntries(entry, VatAmountList);
+                            var isInvoice = false;
 
-                            // check Transaction is Payment Type Case 1
-                            if (entry.Where(x=>x.DocumentType == "Payment").Count() == entry.Where(x=>string.IsNullOrEmpty(x.GenPostingType.Trim())).Count() 
-                                && entry.Count() ==2)
-                            {
-                                mainAccountNumber = entry.OrderByDescending(x => x.EntryNo).ToList();
-                            } 
-                            else if(entry.Where(x=> string.IsNullOrEmpty(x.GenPostingType.Trim()) && 
-                                                x.DocumentType== "Payment").Count() == entry.Count() && 
-                                    entry.Where(x=> string.IsNullOrEmpty(x.SourceNo)).Count() == 1)
-                            {
-                                mainAccountNumber = entry.Where(x=> string.IsNullOrEmpty(x.SourceNo)).OrderByDescending(x => x.EntryNo).ToList();
-                            }
+                            var mainAccountNumber = GetMainAccountEntries(entry, VatAmountList, out isInvoice);
 
                             if (mainAccountNumber.FirstOrDefault() == null)
-                                continue;
-
-                            for (int i = 0; i < entry.Count(); i++)
                             {
-                                if (!(IsValidEntryCondition(entry, i, mainAccountNumber)))
-                                    continue;
+                                var msg = "Not inserted transasction number " + entry[1].Transaktionsnummer;
+                                job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", message: msg, forBulkCommit: true);
+                                continue;
+                            }
 
-                                var bookRecord = InsertBookRecord(ref entry, i,ref mainAccountNumber, ref listCostCenter, ref bookingRun, ref dbAccountCodeUpdated, ref job);
+                            if (isInvoice)
+                            {
+                                for (int i = 0; i < entry.Count(); i++)
+                                {
+                                    if (!(IsValidEntryCondition(entry, i, mainAccountNumber)))
+                                        continue;
+
+                                    var bookRecord = InsertBookRecord(ref entry, i, ref mainAccountNumber, ref listCostCenter, ref bookingRun, ref dbAccountCodeUpdated, ref job, ref VatAmountList);
+                                    listbook.Add(bookRecord);
+                                }
+                            }
+                            else
+                            {
+                                var bookRecord = InsertBookRecordGeneral(ref entry, ref mainAccountNumber, ref listCostCenter, ref bookingRun, ref dbAccountCodeUpdated, ref job);
                                 listbook.Add(bookRecord);
                             }
                         }
@@ -189,26 +194,25 @@ namespace VerumBusinessObjects
                             {
                                 recordsImported++;
                                 tBookRecords.Add(bookrecord.data);
-                                foreach(var tbooktran in bookrecord._BookTransactions)
+                                foreach (var tbooktran in bookrecord._BookTransactions)
                                 {
                                     tBookTransactions.Add(tbooktran.data);
                                 }
                             }
                         }
-                        
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         if (job != null)
                         {
-                            job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", message: "someting went wrong transaction number : " + tran+ ". Error : " + ex.Message, forBulkCommit: true);
+                            job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", message: "someting went wrong transaction number : " + tran + ". Error : " + ex.Message, forBulkCommit: true);
                         }
                     }
                 }
 
                 BookRecord.CommitChangesBulk(tBookRecords, tBookTransactions);
 
-                if (bookingRun !=null)
+                if (bookingRun != null)
                 {
                     // Update booking run record with number of records read upon successful import
                     bookingRun.RecordsImported = recordsImported;
@@ -216,25 +220,25 @@ namespace VerumBusinessObjects
 
                     bookingRun.CommitChanges();
                 }
-                
+
                 List<tJobReportItem> tJobReportItems = new List<tJobReportItem>();
-                foreach(var item in job.JobReportItemList)
+                foreach (var item in job.JobReportItemList)
                 {
                     tJobReportItems.Add(item.data);
                 }
 
-                if(tJobReportItems.Count>0) JobReport.CommitChangesBulkJobReportItem(tJobReportItems);
+                if (tJobReportItems.Count > 0) JobReport.CommitChangesBulkJobReportItem(tJobReportItems);
                 job.EndJob();
 
                 // get inserted recored and export
                 var bookingrecored = await BookRecord.GetBookRecord(transactionnumber).ToListAsync();
                 var bookingrecoredTran = await BookTransaction.GetBookRecordTran(transactionnumber).ToListAsync();
-                //ExcelImportExport.ExportExcel<tBookTransaction>(bookingrecoredTran, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tBookTransaction", "BookTransaction");
-                //ExcelImportExport.ExportExcel<tBookRecord>(bookingrecored, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tBookRecord", "BookRecord");
-                //ExcelImportExport.ExportExcel<tJobReportItem>(JobReportItem.GetTableList(job), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tJobReportItem", "JobReportItem");
-                //ExcelImportExport.ExportExcel<tJobReport>(JobReport.GetJob(job.Id), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tJobReport", "JobReport");
-                //ExcelImportExport.ExportExcel<tAccount>(Account.GetAccountAllList(), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tAccount", "Account");
-                //ExcelImportExport.ExportExcel<tAccountGroup>(AccountGroup.GetAccountGroupAllList(), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tAccountGroup", "tAccountGroup");
+                ExcelImportExport.ExportExcel<tBookTransaction>(bookingrecoredTran, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tBookTransaction", "BookTransaction");
+                ExcelImportExport.ExportExcel<tBookRecord>(bookingrecored, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tBookRecord", "BookRecord");
+                ExcelImportExport.ExportExcel<tJobReportItem>(JobReportItem.GetTableList(job), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tJobReportItem", "JobReportItem");
+                ExcelImportExport.ExportExcel<tJobReport>(JobReport.GetJob(job.Id), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tJobReport", "JobReport");
+                ExcelImportExport.ExportExcel<tAccount>(Account.GetAccountAllList(), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tAccount", "Account");
+                ExcelImportExport.ExportExcel<tAccountGroup>(AccountGroup.GetAccountGroupAllList(), Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_tAccountGroup", "tAccountGroup");
 
                 return BOResult.Success;
             }
@@ -259,9 +263,9 @@ namespace VerumBusinessObjects
             var datetime = DateTime.UtcNow;
 
             if (client == null)
-                return BOResult.GeneralError;       
+                return BOResult.GeneralError;
 
-            if (client.BCLastUpdate<=DateTime.MinValue)
+            if (client.BCLastUpdate <= DateTime.MinValue)
                 nextLink = model.BCUrl;
             else
                 nextLink = model.BCUrl + "?$filter=Erstellt gt " + Uri.EscapeDataString(Convert.ToDateTime(client.BCLastUpdate).ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ"));
@@ -273,7 +277,7 @@ namespace VerumBusinessObjects
                 nextLink = nextData.NextLink;
             }
 
-            //ExcelImportExport.ExportExcel<GeneralLedgerPageResModel.GeneralLedgerValue>(generalLedger.value, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_BC","GeneralLedger");
+            ExcelImportExport.ExportExcel<GeneralLedgerPageResModel.GeneralLedgerValue>(generalLedger.value, Convert.ToDateTime(model.RunDateTime).ToString("yyyy_MM_dd_HH_mm_ss_ffZ") + "_BC", "GeneralLedger");
             return await InsertBookRecord(generalLedger, model);
         }
 
@@ -316,13 +320,15 @@ namespace VerumBusinessObjects
             return res;
         }
 
-        public BookRecord InsertBookRecord(ref List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, int i, ref List<GeneralLedgerPageResModel.GeneralLedgerValue> mainAccountNumber, ref List<tCostCenter> listCostCenter, ref BookingRun bookingRun, ref List<AccountCodeModel> dbAccountCodeUpdated, ref JobReport job)
+        public BookRecord InsertBookRecord(ref List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, int i, 
+            ref List<GeneralLedgerPageResModel.GeneralLedgerValue> mainAccountNumber, ref List<tCostCenter> listCostCenter, 
+            ref BookingRun bookingRun, ref List<AccountCodeModel> dbAccountCodeUpdated, ref JobReport job, ref List<double> VatAmountList)
         {
 
             if (entry[i].SourceNo == "COBA" || entry[i].SourceNo.Trim() == "")
                 entry[i].SourceNo = "1803";
 
-            int accountDebitCode,accountCreditCode, recordsOmitted = 0;
+            int accountDebitCode, accountCreditCode, recordsOmitted = 0;
             Guid accountDebitGuid, accountCreditGuid;
             bool flagAccountOpening = false;
 
@@ -330,7 +336,7 @@ namespace VerumBusinessObjects
             accountCreditCode = entry[i].CreditAmount > 0 ? entry[i].GLAccountNo : Convert.ToInt32(entry[i].SourceNo);
 
             #region find and save account code and set value into accountDebitGuid & accountCreditGuid 
-            if (dbAccountCodeUpdated.Where(x=>x.AccountCode== accountDebitCode).Count()>0)
+            if (dbAccountCodeUpdated.Where(x => x.AccountCode == accountDebitCode).Count() > 0)
                 accountDebitGuid = dbAccountCodeUpdated.Where(x => x.AccountCode == accountDebitCode).FirstOrDefault().Guid;
             else
             {
@@ -344,10 +350,10 @@ namespace VerumBusinessObjects
             else
             {
                 var accountCredit = new Account();
-                NewAccount(accountCreditCode, ref accountCredit, ref job,bookingRun == null ? "" : bookingRun.BookingRunCode);
+                NewAccount(accountCreditCode, ref accountCredit, ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
                 accountCreditGuid = accountCredit.Id;
             }
-            
+
             var accountNo = (mainAccountNumber.FirstOrDefault().SourceNo == "COBA" || mainAccountNumber.FirstOrDefault().SourceNo.Trim() == "") ? 1803 : Convert.ToInt32(mainAccountNumber.FirstOrDefault().SourceNo);
             if (dbAccountCodeUpdated.Where(x => x.AccountCode == accountNo).Count() == 0)
             {
@@ -366,14 +372,13 @@ namespace VerumBusinessObjects
             var GlobalDimension1Code = entry[i].GlobalDimension1Code;
             var costCenterId = listCostCenter.Where(x => x.CostCenterCode == GlobalDimension1Code).Select(x => x.Id).FirstOrDefault();
 
-            if(costCenterId == Guid.Empty && !string.IsNullOrEmpty(GlobalDimension1Code))
-                if(job != null)
-                    job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "GlobalDimension1Code ("+ entry[i].GlobalDimension1Code + ")  not found into tCostCenter table.Check Transaction Number : " + entry[i].Transaktionsnummer, forBulkCommit: true);
+            if (costCenterId == Guid.Empty && !string.IsNullOrEmpty(GlobalDimension1Code))
+                if (job != null)
+                    job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "GlobalDimension1Code (" + entry[i].GlobalDimension1Code + ")  not found into tCostCenter table.Check Transaction Number : " + entry[i].Transaktionsnummer, forBulkCommit: true);
 
             if (string.IsNullOrEmpty(entry[i].GlobalDimension2Code))
                 if (job != null)
                     job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "BC GlobalDimension2Code is blank. Check Transaction Number : " + entry[i].Transaktionsnummer, forBulkCommit: true);
-
 
             if (string.IsNullOrEmpty(GlobalDimension1Code))
                 if (job != null)
@@ -403,11 +408,12 @@ namespace VerumBusinessObjects
             bookRecord.BookingRunCode = bookingRun.BookingRunCode;
             bookRecord.BCDocumentType = string.IsNullOrEmpty(entry[i].DocumentType) ? "Blank" : entry[i].DocumentType;
             bookRecord.BCDocumentNo = entry[i].DocumentNo;
-            bookRecord.TitleBookRecord = string.Join(", " , entry.Where(x => !string.IsNullOrEmpty(x.Description)).Select(x => x.Description).Distinct().ToList<string>());
+            bookRecord.TitleBookRecord = string.Join(", ", entry.Where(x => !string.IsNullOrEmpty(x.Description)).Select(x => x.Description).Distinct().ToList<string>());
             bookRecord.BookingDocument = entry[i].ExternalDocumentNo;
 
             if (bookRecord != null)
             {
+                var vatAmountList = VatAmountList; 
                 bookRecord.AddTransaction(entry[i].GLAccountNo, entry[i].CreditAmount, entry[i].DebitAmount, null, flagAccountOpening, BCTransactionNo: entry[i].Transaktionsnummer, BCGeneralLedgerPageAPIEntryNo: entry[i].EntryNo);
                 bookRecord.BCEntryNumber = entry[i].EntryNo.ToString();
                 var vatAmount2 = 0d;
@@ -415,15 +421,15 @@ namespace VerumBusinessObjects
                 {
                     var VatAmount = entry[i].VATAmount;
                     var VatAccountNo = entry.Where(x => x.Amount == VatAmount).FirstOrDefault();
-                    
+
                     if (VatAccountNo != null)
                     {
                         bookRecord.AddTransaction(VatAccountNo.GLAccountNo, (entry[i].VATAmount < 0 ? -(entry[i].VATAmount) : 0), (entry[i].VATAmount > 0 ? entry[i].VATAmount : 0), null, flagAccountOpening, BCTransactionNo: entry[i].Transaktionsnummer, BCGeneralLedgerPageAPIEntryNo: VatAccountNo.EntryNo);
                         bookRecord.BCEntryNumber = bookRecord.BCEntryNumber + ", " + VatAccountNo.EntryNo.ToString();
 
-                        if(entry[i].VATAmount>0)
+                        if (entry[i].VATAmount > 0)
                         {
-                            if (entry.Where(x => x.CreditAmount == VatAmount).FirstOrDefault() != null)
+                            if (entry.Where(x => x.CreditAmount == VatAmount && !vatAmountList.Contains(x.Amount)).FirstOrDefault() != null)
                             {
                                 var multipleTax = entry.Where(x => x.CreditAmount == VatAmount).FirstOrDefault();
 
@@ -432,9 +438,9 @@ namespace VerumBusinessObjects
                                 vatAmount2 = multipleTax.Amount;
                             }
                         }
-                        else if(entry[i].VATAmount < 0)  
+                        else if (entry[i].VATAmount < 0)
                         {
-                            if(entry.Where(x => x.DebitAmount == -(VatAmount)).FirstOrDefault() !=null)
+                            if (entry.Where(x => x.DebitAmount == -(VatAmount) && !vatAmountList.Contains(x.Amount)).FirstOrDefault() != null)
                             {
                                 var multipleTax = entry.Where(x => x.DebitAmount == -(VatAmount)).FirstOrDefault();
 
@@ -449,7 +455,7 @@ namespace VerumBusinessObjects
                 if ((entry[i].Amount + entry[i].VATAmount + vatAmount2) < 0)
                 {
                     bookRecord.Amount = -(entry[i].Amount + entry[i].VATAmount + vatAmount2);
-                    bookRecord.AddTransaction(accountNo, 0, bookRecord.Amount, null, flagAccountOpening, BCTransactionNo: entry[i].Transaktionsnummer, BCGeneralLedgerPageAPIEntryNo: mainAccountNumber.FirstOrDefault().EntryNo);
+                    bookRecord.AddTransaction(accountNo, 0, bookRecord.Amount, null, flagAccountOpening, BCTransactionNo: entry[i].Transaktionsnummer, BCGeneralLedgerPageAPIEntryNo: mainAccountNumber.FirstOrDefault().EntryNo);  //mainAccountNumber.FirstOrDefault().EntryNo
                 }
                 else
                 {
@@ -460,7 +466,108 @@ namespace VerumBusinessObjects
 
             return bookRecord;
         }
-        
+
+        public BookRecord InsertBookRecordGeneral(ref List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, ref List<GeneralLedgerPageResModel.GeneralLedgerValue> mainAccountNumber, ref List<tCostCenter> listCostCenter, ref BookingRun bookingRun, ref List<AccountCodeModel> dbAccountCodeUpdated, ref JobReport job)
+        {
+            var mainRecord = mainAccountNumber.FirstOrDefault();
+
+            if (mainRecord.SourceNo == "COBA" || mainRecord.SourceNo.Trim() == "")
+                mainRecord.SourceNo = "1803";
+
+            int accountDebitCode, accountCreditCode, recordsOmitted = 0;
+            Guid accountDebitGuid, accountCreditGuid;
+            bool flagAccountOpening = false;
+
+            accountDebitCode = mainRecord.DebitAmount > 0 ? mainRecord.GLAccountNo : Convert.ToInt32(mainRecord.SourceNo);
+            accountCreditCode = mainRecord.CreditAmount > 0 ? mainRecord.GLAccountNo : Convert.ToInt32(mainRecord.SourceNo);
+
+            #region find and save account code and set value into accountDebitGuid & accountCreditGuid 
+            if (dbAccountCodeUpdated.Where(x => x.AccountCode == accountDebitCode).Count() > 0)
+                accountDebitGuid = dbAccountCodeUpdated.Where(x => x.AccountCode == accountDebitCode).FirstOrDefault().Guid;
+            else
+            {
+                var accountDebit = new Account();
+                NewAccount(accountDebitCode, ref accountDebit, ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
+                accountDebitGuid = accountDebit.Id;
+            }
+
+            if (dbAccountCodeUpdated.Where(x => x.AccountCode == accountCreditCode).Count() > 0)
+                accountCreditGuid = dbAccountCodeUpdated.Where(x => x.AccountCode == accountCreditCode).FirstOrDefault().Guid;
+            else
+            {
+                var accountCredit = new Account();
+                NewAccount(accountCreditCode, ref accountCredit, ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
+                accountCreditGuid = accountCredit.Id;
+            }
+
+            //var accountNo = (mainAccountNumber.FirstOrDefault().SourceNo == "COBA" || mainAccountNumber.FirstOrDefault().SourceNo.Trim() == "") ? 1803 : Convert.ToInt32(mainAccountNumber.FirstOrDefault().SourceNo);
+            //if (dbAccountCodeUpdated.Where(x => x.AccountCode == accountNo).Count() == 0)
+            //{
+            //    var account = new Account();
+            //    NewAccount(accountCreditCode, ref account, ref job, bookingRun == null ? "" : bookingRun.BookingRunCode);
+            //}
+            #endregion
+
+            // determine whether record is for account opening booking (EB-Wert)
+            if ((accountCreditCode >= 9000 && accountCreditCode <= 9099) || (accountDebitCode >= 9000 && accountDebitCode <= 9099))
+                flagAccountOpening = true;
+            else
+                flagAccountOpening = false;
+
+            // get cost center id
+            var GlobalDimension1Code = mainRecord.GlobalDimension1Code;
+            var costCenterId = listCostCenter.Where(x => x.CostCenterCode == GlobalDimension1Code).Select(x => x.Id).FirstOrDefault();
+
+            if (costCenterId == Guid.Empty && !string.IsNullOrEmpty(GlobalDimension1Code))
+                if (job != null)
+                    job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "GlobalDimension1Code (" + mainRecord.GlobalDimension1Code + ")  not found into tCostCenter table.Check Transaction Number : " + mainRecord.Transaktionsnummer, forBulkCommit: true);
+
+            if (string.IsNullOrEmpty(mainRecord.GlobalDimension2Code))
+                if (job != null)
+                    job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "BC GlobalDimension2Code is blank. Check Transaction Number : " + mainRecord.Transaktionsnummer, forBulkCommit: true);
+
+            if (string.IsNullOrEmpty(GlobalDimension1Code))
+                if (job != null)
+                    job.Report(TypeJobSuccessEnum.Error, BOResult.GeneralError, "Business Center API", contextInfo: bookingRun.BookingRunCode, message: "BC GlobalDimension1Code is blank. Check Transaction Number : " + mainRecord.Transaktionsnummer, forBulkCommit: true);
+
+            var bookRecord = new BookRecord();
+            bookRecord.New();
+
+            bookRecord.TypeBookRecord = (short)TypeBookRecordEnum.Actual;
+            bookRecord.BCDateCreated = mainRecord.CreatedDate;
+            bookRecord.BCDateUpdated = mainRecord.LastModifiedDate;
+            bookRecord.FlagOutdated = false;
+            bookRecord.TypeBookRecord = 0;
+            bookRecord.FlagAccountOpening = flagAccountOpening;
+            bookRecord.idAccountDebit = accountDebitGuid;
+            bookRecord.idAccountCredit = accountCreditGuid;
+            //if (costCenterId != null) bookRecord.idCostCenterBookRecord = costCenterId;
+            bookRecord.AccountCodeDebit = accountDebitCode;
+            bookRecord.AccountCodeCredit = accountCreditCode;
+            bookRecord.BookingDate = mainRecord.PostingDate;
+            bookRecord.Amount = mainRecord.Amount < 0 ? -mainRecord.Amount : mainRecord.Amount;
+            bookRecord.BookingDocument = mainRecord.DocumentNo;
+            //bookRecord.ReferenceIDBookRecord = mainRecord.GlobalDimension2Code;
+            bookRecord.BCTransactionNo = mainRecord.Transaktionsnummer;
+            bookRecord.TransactionMainAccountCode = mainAccountNumber.FirstOrDefault().GLAccountNo;
+            bookRecord.idBookingRun = bookingRun.Id;
+            bookRecord.BookingRunCode = bookingRun.BookingRunCode;
+            bookRecord.BCDocumentType = string.IsNullOrEmpty(mainRecord.DocumentType) ? "Blank" : mainRecord.DocumentType;
+            bookRecord.BCDocumentNo = mainRecord.DocumentNo;
+            //bookRecord.TitleBookRecord = string.Join(", ", entry.Where(x => !string.IsNullOrEmpty(x.Description)).Select(x => x.Description).Distinct().ToList<string>());
+
+            if (bookRecord != null)
+            {
+                foreach(var item in entry)
+                {
+                    bookRecord.AddTransaction(item.GLAccountNo, item.CreditAmount, item.DebitAmount, null, flagAccountOpening, BCTransactionNo: item.Transaktionsnummer, BCGeneralLedgerPageAPIEntryNo: item.EntryNo, Description:item.Description,ExternalDocumentNo: item.ExternalDocumentNo);
+                }
+            }
+
+            return bookRecord;
+        }
+
+
         public void NewAccount(List<int> accountCodes, ref JobReport job, string bookingRunCode)
         {
             var account = new Account();
@@ -470,7 +577,7 @@ namespace VerumBusinessObjects
             }
         }
 
-        public void NewAccount(int accountCode, ref Account account, ref  JobReport job, string bookingRunCode)
+        public void NewAccount(int accountCode, ref Account account, ref JobReport job, string bookingRunCode)
         {
             if (!account.SelectViaKey(accountCode))
             {
@@ -500,7 +607,7 @@ namespace VerumBusinessObjects
                     account.CommitChanges();
 
                     VerumInstance.SaveChanges(true);
-                    job.Report(TypeJobSuccessEnum.Warning, BOResult.BCInvalidAccountNumber, "Business Center API",contextInfo: bookingRunCode,message: $"Missing account number {accountCode} created");
+                    job.Report(TypeJobSuccessEnum.Warning, BOResult.BCInvalidAccountNumber, "Business Center API", contextInfo: bookingRunCode, message: $"Missing account number {accountCode} created");
                 }
                 else
                 {
@@ -509,36 +616,255 @@ namespace VerumBusinessObjects
             }
         }
 
-        public List<GeneralLedgerPageResModel.GeneralLedgerValue> GetMainAccountEntries(List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, List<double> VatAmountList)
+        public List<GeneralLedgerPageResModel.GeneralLedgerValue> GetMainAccountEntries(List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, List<double> VatAmountList, out bool isInvoice)
         {
-            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim()) &&
+
+
+            isInvoice = false;
+
+            if (entry.Where(x => x.DocumentType.Trim() == "Invoice").ToList().Count > 0)
+            {
+                if(!(entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim()) && !VatAmountList.Contains(x.Amount)).ToList().Count >1))
+                    isInvoice = true;
+            }
+
+            if (isInvoice)
+            {
+                // for invoce case we are getting last entry of entry is main account number.
+                return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim()) &&
                                                                 !VatAmountList.Contains(x.Amount))
-                                                    .OrderByDescending(i => i.EntryNo).ToList();
+                                                    .OrderByDescending(i => i.EntryNo).Take(1).ToList();
+            }
+            else
+            {
+                entry = entry.OrderBy(x => x.EntryNo).ToList();
+
+                if (entry.Count == 2)
+                {
+                    if (entry[1].BalAccountType.Trim() == "Bank Account" && entry[1].SourceType.Trim() == "Bank Account")
+                    {
+                        if (entry.Where(x => x.GenPostingType.Trim() == "").ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Bank Account")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "Customer" && entry[1].SourceType.Trim() == "Bank Account")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "Vendor" && entry[1].SourceType.Trim() == "Vendor")
+                    {
+                        // change order then get last row
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.OrderByDescending(x => x.EntryNo).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "Vendor" && entry[1].SourceType.Trim() == "Bank Account")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Vendor")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+                    else if (entry[1].BalAccountType.Trim() == "Bank Account" && entry[1].SourceType.Trim() == "Vendor")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Customer")
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            return entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+                    else
+                    {
+                        if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 0)
+                            return entry.Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 1)
+                            entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).Take(1).ToList();
+
+                        else if (entry.Where(x => string.IsNullOrEmpty(x.GenPostingType.Trim())).ToList().Count == 2)
+                            return entry.Take(1).ToList();
+                        else
+                            return entry.Take(1).ToList();
+                    }
+                }
+                else if (entry.Count > 2)
+                {
+                    if (entry[1].BalAccountType.Trim() == "Bank Account" && entry[1].SourceType.Trim() == "Bank Account")
+                        return entry.OrderByDescending(x => x.EntryNo).Take(1).ToList();
+
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Bank Account")
+                        return entry.OrderBy(x => x.EntryNo).Take(1).ToList();
+
+                    else if (entry[1].BalAccountType.Trim() == "Customer" && entry[1].SourceType.Trim() == "Bank Account")
+                        return entry.OrderBy(x => x.EntryNo).Take(1).ToList();
+
+                    else if (entry[1].BalAccountType.Trim() == "Vendor" && entry[1].SourceType.Trim() == "Vendor")
+                    {
+                        var glaccountid = entry.OrderBy(x => x.EntryNo).FirstOrDefault().GLAccountNo;
+
+                        return entry.Where(x => x.BalAccountNo == glaccountid.ToString()).Take(1).ToList();
+                    }
+
+                    else if (entry[1].BalAccountType.Trim() == "Vendor" && entry[1].SourceType.Trim() == "Bank Account")
+                        return entry.Where(x => !VatAmountList.Contains(x.Amount) && string.IsNullOrEmpty(x.GenPostingType.Trim()))
+                            .Take(1).ToList();
+
+                    // 12140, 720
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Vendor")
+                        return entry.Where(x => !VatAmountList.Contains(x.Amount) && string.IsNullOrEmpty(x.GenPostingType.Trim()))
+                            .OrderByDescending(x => x.EntryNo).Take(1).ToList();
+
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "")
+                        return entry.Where(x => !VatAmountList.Contains(x.Amount) && string.IsNullOrEmpty(x.GenPostingType.Trim()))
+                            .OrderByDescending(x => x.EntryNo).Take(1).ToList();
+                    else if (entry[1].BalAccountType.Trim() == "Bank Account" && entry[1].SourceType.Trim() == "Vendor")
+                    {
+                        return entry.Where(x => !VatAmountList.Contains(x.Amount) && string.IsNullOrEmpty(x.GenPostingType.Trim()))
+                            .OrderBy(x => x.EntryNo).Take(1).ToList();
+                    }
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "Customer")
+                    {
+                        return entry.Where(x => !VatAmountList.Contains(x.Amount) && string.IsNullOrEmpty(x.GenPostingType.Trim()))
+                            .OrderByDescending(x => x.EntryNo).Take(1).ToList();
+                    }
+                    else if (entry[1].BalAccountType.Trim() == "G/L Account" && entry[1].SourceType.Trim() == "")
+                    {
+                        // pending this condition
+                    }
+                }
+            }
+
+            return new List<GeneralLedgerPageResModel.GeneralLedgerValue>();
         }
 
-        public bool IsValidEntryCondition(List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, int i, List<GeneralLedgerPageResModel.GeneralLedgerValue> mainAccountNumber)
+        public bool IsGeneralEntry(List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, List<double> VatAmountList)
         {
-            if (string.IsNullOrEmpty(entry[i].GenPostingType.Trim()))
+            if (entry.Where(x => x.DocumentType == "Invoice").ToList().Count > 0)
             {
-                if (entry[i].EntryNo == mainAccountNumber.FirstOrDefault().EntryNo)
-                    return false;
-                
-                if(mainAccountNumber.Count>1)
-                {
-                    if (mainAccountNumber.Where(x => x.EntryNo != mainAccountNumber.FirstOrDefault().EntryNo &&
-                                            x.EntryNo == entry[i].EntryNo).Count() == 0)
-                        return false;
-                }
-
-                if (entry.Where(x => x.VATAmount == entry[i].Amount).Count() > 0)
-                    return false;
-
-                // by this condition we can identity is reserve entry of VatAmout or not
-                if(entry.Where(x=>x.Amount == -entry[i].Amount).Count()>0 && entry.Count()>2 && entry.Where(x=>x.VATAmount== -entry[i].Amount).Count()>0)
+                if (entry.Where(x => x.GenPostingType == " " && !VatAmountList.Contains(x.Amount)).ToList().Count == 0)
                     return false;
             }
 
             return true;
+        }
+
+        public bool IsValidEntryCondition(List<GeneralLedgerPageResModel.GeneralLedgerValue> entry, int i, List<GeneralLedgerPageResModel.GeneralLedgerValue> mainAccountNumber)
+        {
+            if (!string.IsNullOrEmpty(entry[i].GenPostingType.Trim()))
+            {
+                if (entry[i].EntryNo == mainAccountNumber.FirstOrDefault().EntryNo)
+                    return false;
+
+                //if(mainAccountNumber.Count>1)
+                //{
+                //    if (mainAccountNumber.Where(x => x.EntryNo != mainAccountNumber.FirstOrDefault().EntryNo &&
+                //                            x.EntryNo == entry[i].EntryNo).Count() == 0)
+                //        return false;
+                //}
+
+                if (entry.Where(x => x.VATAmount == entry[i].Amount && string.IsNullOrEmpty(x.GenPostingType)).Count() > 0)
+                    return false;
+
+                // by this condition we can identity is reserve entry of VatAmout or not
+                //if(entry.Where(x=>x.Amount == -entry[i].Amount).Count()>0 && entry.Count()>2 && entry.Where(x=>x.VATAmount== -entry[i].Amount).Count()>0)
+                //    return false;
+
+                return true;
+            }
+
+            return false;
         }
 
         public BookingRun BusinessCenterBookingRunNew()
@@ -559,7 +885,7 @@ namespace VerumBusinessObjects
             bookingRun.ImportFileName = "BusinessCenterAPI";
             bookingRun.ImportFileDate = DateTime.UtcNow;
             bookingRun.idClient = VerumInstance.IdClient;
-            bookingRun.BookingRunCode = "BC"+ addedZero.Substring(addedZero.Length - 4) +"-" + DateTime.Now.ToString("yyyy-MM-dd");
+            bookingRun.BookingRunCode = "BC" + addedZero.Substring(addedZero.Length - 4) + "-" + DateTime.Now.ToString("yyyy-MM-dd");
             bookingRun.VersionCode = 0;
             bookingRun.StatusPreliminary = false;
             bookingRun.PeriodYear = 0;
@@ -581,7 +907,7 @@ namespace VerumBusinessObjects
             foreach (var BO in BOCollClient)
                 client.Add(BO);
 
-            if(client.Count>0)
+            if (client.Count > 0)
             {
                 lastEntryDate = Convert.ToDateTime(client.FirstOrDefault().BCLastUpdate).ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
                 return;

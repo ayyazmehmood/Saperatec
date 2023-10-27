@@ -35,9 +35,13 @@ namespace VerumDesk.GUI
                 return;
             }
 
-            else if (CostCenter.CheckKeyExists(tbCostCenterCode.Text.Trim()))
+            else if (!CostCenter.CheckKeyExists(tbCostCenterCode.Text.Trim()))
             {
-                System.Windows.MessageBox.Show("Eine Kostenstelle mit diesem Schlüssel gibt es bereits.", "Kostenstelle anlegen", MessageBoxButton.OK, MessageBoxImage.Warning);
+                // A cost center with this key already exists
+                //System.Windows.MessageBox.Show("Eine Kostenstelle mit diesem Schlüssel gibt es bereits.", "Kostenstelle anlegen", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                //A cost center with this key is not exists
+                System.Windows.MessageBox.Show("Eine Kostenstelle mit diesem Schlüssel ist nicht vorhanden.", "Kostenstelle anlegen", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

@@ -8,3 +8,13 @@ D:\Verum Project\Project\Verum - Copy\VerumDatabase\obj\Debug\postdeploy.sql
 D:\Verum Project\Project\Verum - Copy\VerumDatabase\obj\Debug\predeploy.sql
 D:\Verum Project\Project\Verum - Copy\VerumDatabase\obj\Debug\VerumDatabase.dll
 D:\Verum Project\Project\Verum - Copy\VerumDatabase\obj\Debug\VerumDatabase.pdb
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\bin\Debug\VerumDatabase.dacpac
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\bin\Debug\VerumDatabase.dll
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\bin\Debug\VerumDatabase.pdb
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\VerumDatabase.sqlproj.AssemblyReference.cache
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\Model.xml
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\refactor.xml
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\postdeploy.sql
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\predeploy.sql
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\VerumDatabase.dll
+D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\VerumDatabase.pdb

@@ -12,7 +12,7 @@
 		</CustomData>
 		<CustomData Category="Reference" Type="Assembly">
 			<Metadata Name="LogicalName" Value="VerumDatabase.dll" />
-			<Metadata Name="FileName" Value="D:\VERUM PROJECT\PROJECT\VERUM - COPY\VERUMDATABASE\OBJ\DEBUG\VERUMDATABASE.DLL" />
+			<Metadata Name="FileName" Value="D:\PROJECTS\VERUM PROJECT\PROJECT\VERUM-GIT 26-10-2023 V3\VERUMDATABASE\OBJ\DEBUG\VERUMDATABASE.DLL" />
 			<Metadata Name="AssemblyName" Value="VerumDatabase" />
 			<Metadata Name="PermissionSet" Value="SAFE" />
 			<Metadata Name="Owner" Value="" />
@@ -20,7 +20,7 @@
 			<Metadata Name="IsVisible" Value="True" />
 			<Metadata Name="IsModelAware" Value="True" />
 			<Metadata Name="SkipCreationIfEmpty" Value="True" />
-			<Metadata Name="AssemblySymbolsName" Value="D:\Verum Project\Project\Verum - Copy\VerumDatabase\obj\Debug\VerumDatabase.pdb" />
+			<Metadata Name="AssemblySymbolsName" Value="D:\Projects\Verum Project\Project\Verum-Git 26-10-2023 v3\VerumDatabase\obj\Debug\VerumDatabase.pdb" />
 		</CustomData>
 		<CustomData Category="SqlCmdVariables" Type="SqlCmdVariable" />
 	</Header>

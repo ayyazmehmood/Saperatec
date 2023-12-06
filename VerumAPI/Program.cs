@@ -7,6 +7,15 @@ using VerumBusinessObjects.Framework;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,6 +50,8 @@ app.UseSwaggerUI(c =>
 //    c.RoutePrefix = "swagger"; // Optional: customize the URL
 //});
 //}
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

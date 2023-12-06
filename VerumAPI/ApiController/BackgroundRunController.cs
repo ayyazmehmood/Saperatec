@@ -1,8 +1,13 @@
-﻿using DocumentFormat.OpenXml.Office2013.Excel;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2013.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 using VerumBusinessObjects;
+using VerumBusinessObjects.CommonModel;
 using VerumBusinessObjects.Framework;
 
 namespace VerumAPI.ApiController
@@ -12,6 +17,8 @@ namespace VerumAPI.ApiController
     public class BackgroundRunController : ControllerBase
     {
         public static Task myTask = null;
+        private BOCollection<CostCenter, tCostCenter> BOColl;
+        private List<CostCenterModel> costCenterList;
         public static List<RunningClientModel> runningClientModels = new List<RunningClientModel>();
         private readonly IConfiguration _configuration;
         private readonly string _connectionString = "";
@@ -140,6 +147,44 @@ namespace VerumAPI.ApiController
         //    };
 
         //    return obj;
+        //}
+
+        //[HttpPost(Name ="LoginAdmin")]
+
+        //public BOResult LoginAdmin(string user, string password )
+        //{
+        //    VerumSession.SetConnection(_connectionString);
+        //    VerumSession verumSession = new VerumSession();
+        //    return verumSession.Logon(user, password, _connectionString);
+        //}
+        
+        //[HttpGet(Name ="GetTCostCenter")]
+
+        //public List<CostCenterModel> CostCenters()
+        //{
+        //    BOColl = CostCenter.GetBOCollection();
+        //    costCenterList =  new List<CostCenterModel>();
+
+        //    CostCenterModel obj;
+        //    foreach (var item in BOColl)
+        //    {
+        //        obj = new CostCenterModel();
+        //        obj.Id = item.Id;
+        //        obj.DateCreated = item.DateCreated;
+        //        obj.DateUpdated = item.DateUpdated;
+        //        obj.idClient = item.idClient;
+        //        obj.CostCenterCode = item.CostCenterCode;
+        //        obj.TitleCostCenter = item.TitleCostCenter;
+        //        obj.TitleEnglishCostCenter = item.TitleEnglishCostCenter;
+        //        obj.FlagProfitCenter = item.FlagProfitCenter;
+        //        obj.DescriptionCostCenter = item.DescriptionCostCenter;
+                
+        //        costCenterList.Add(obj);
+        //    }
+
+        //    return costCenterList;
+
+
         //}
     }
 }

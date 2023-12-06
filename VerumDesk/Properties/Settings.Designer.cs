@@ -12,7 +12,7 @@ namespace VerumDesk.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -113,7 +113,7 @@ namespace VerumDesk.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source = TECHCOMPILER-35; Initial Catalog = VerumTest; Integrated Security =" +
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source = TECHCOMPILER-67; Initial Catalog = VerumTest; Integrated Security =" +
             " True")]
         public string DBConnectionDevelop {
             get {

@@ -30,7 +30,7 @@
 ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=120;</Value>
     </Setting>
     <Setting Name="DBConnectionDevelop" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source = TECHCOMPILER-35; Initial Catalog = VerumTest; Integrated Security = True</Value>
+      <Value Profile="(Default)">Data Source = TECHCOMPILER-67; Initial Catalog = VerumTest; Integrated Security = True</Value>
     </Setting>
     <Setting Name="VerumAPIBaseUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://localhost:7226</Value>

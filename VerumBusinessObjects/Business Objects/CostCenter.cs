@@ -11,6 +11,26 @@
     using System.ComponentModel.DataAnnotations;
     using DocumentFormat.OpenXml.Office2010.ExcelAc;
     using System.Collections.Generic;
+    using VerumBusinessObjects.CommonModel;
+    using DocumentFormat.OpenXml.Bibliography;
+    using DocumentFormat.OpenXml.Office2013.Excel;
+    using Newtonsoft.Json.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Data.Entity;
+    using System.Drawing.Text;
+    using System.Linq;
+    using System.Net;
+    using System.Security.Permissions;
+    using System.Security.Policy;
+    using System.Security.RightsManagement;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows.Interop;
+    using VerumBusinessObjects.Framework;
+    using VerumBusinessObjects.Views;
 
     public partial class CostCenter : BusinessObject<tCostCenter>, ICostCenter
     {
@@ -116,5 +136,47 @@
             var query = VerumInstance.Context.tCostCenter.Where<tCostCenter>(b => b.idClient == VerumInstance.IdClient).OrderBy(b => b.CostCenterCode);
             return query.ToList<tCostCenter>();
         }
+
+        #region API
+
+        public static tCostCenter GetCollectionById(Guid costCenterId)
+        {
+            // select cost centers for the current client
+            var query = VerumInstance.Context.tCostCenter.Where<tCostCenter>(b => b.Id == costCenterId);
+            return query.FirstOrDefault<tCostCenter>();
+        }
+
+        public new BusinessObject<tCostCenter> New()
+        {
+            return New(Guid.NewGuid());
+        }
+
+        public  string UpdateCostCenter(tCostCenter model)
+        {   
+            _db.Entry(model).State = System.Data.Entity.EntityState.Modified;
+            bool force=false;
+            VerumInstance.SaveChanges(force);
+
+            return "Update Record Successful";
+        }
+        public string DeleteCostCenter(tCostCenter model)
+        {
+            _db.tCostCenter.Remove(model);
+            bool force = false;
+            VerumInstance.SaveChanges(force);
+
+            return "Delete Record Successful";
+        }
+
+        public string AddCostCenter(tCostCenter model)
+        {
+            _db.tCostCenter.Add(model);
+            bool force = false;
+            VerumInstance.SaveChanges(force);
+
+            return "Add Record Successful";
+        }
+
+        #endregion
     }
 }

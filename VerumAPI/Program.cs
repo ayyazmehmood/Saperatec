@@ -60,7 +60,7 @@ app.MapGet("/", () => "Hello World!");
 app.MapPost("/bookplan", (Guid IdPlan, bool force) =>
 {
     VerumBusinessObjects.VerumSession session = new VerumBusinessObjects.VerumSession();
-    session.Logon("ffriedrich@saperatec.de", "17Draconis$b", "Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumTest;Persis" +
+    session.Logon("ffriedrich@saperatec.de", "17Draconis$b", "Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=verum;Persis" +
             "t Security Info=False;User ID=azureadmin;Password=U327Shns\r\n;MultipleActiveResul" +
             "tSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
     VerumBusinessObjects.Plan plan = new VerumBusinessObjects.Plan(IdPlan);

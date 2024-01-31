@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="DBConnectionTest" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumTest;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
+      <Value Profile="(Default)">Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=verum;Persist Security Info=False;User ID=azureadmin;Password=U327Shns
 ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</Value>
     </Setting>
     <Setting Name="DBConnectionAlternative" Type="System.String" Scope="User">
@@ -30,7 +30,7 @@
 ;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=120;</Value>
     </Setting>
     <Setting Name="DBConnectionDevelop" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source = TECHCOMPILER-67; Initial Catalog = VerumTest; Integrated Security = True</Value>
+      <Value Profile="(Default)">Data Source = TECHCOMPILER-67; Initial Catalog = verum; Integrated Security = True</Value>
     </Setting>
     <Setting Name="VerumAPIBaseUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://localhost:7226</Value>

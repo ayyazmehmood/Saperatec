@@ -407,8 +407,9 @@ namespace VerumBusinessObjects
 			public Guid Id { get; set; }
 
 			public Guid? IdMigrate { get; set; }
+            public Guid? idBudgetResponsible { get; set; }
 
-			public DateTime DateCreated { get; set; }
+            public DateTime DateCreated { get; set; }
 
 			public DateTime? DateUpdated { get; set; }
 
@@ -1449,5 +1450,122 @@ namespace VerumBusinessObjects
 			public string Description{ get; set; }
 
 		}
+
+    [Table("tApproval")]
+     public partial class tApproval : IDataObject
+    {
+		[Key]
+        public Guid Id { get; set; }
+
+
+        [StringLength(100)]
+        public string ApproverOneEmail { get; set; }
+
+        [StringLength(7)]
+        public string ApproverOneStatus { get; set; }
+
+        public string ApproverOneNote { get; set; }
+
+        [StringLength(20)]
+        public string ApproverOneTime { get; set; }
+
+        [StringLength(100)]
+        public string ApproverTwoEmail { get; set; }
+
+        [StringLength(7)]
+        public string ApproverTwoStatus { get; set; }
+
+        public string ApproverTwoNote { get; set; }
+
+        [StringLength(20)]
+        public string ApproverTwoTime { get; set; }
+
+        [StringLength(100)]
+        public string ApproverThreeEmail { get; set; }
+
+        [StringLength(7)]
+        public string ApproverThreeStatus { get; set; }
+
+        public string ApproverThreeNote { get; set; }
+
+        [StringLength(20)]
+        public string ApproverThreeTime { get; set; }
+
+        public string ApproverItemLink { get; set; }
+
+        [StringLength(15)]
+        public string DocumentNumber { get; set; }
+
+        public double? ApprovalAmount { get; set; }
+
+        [StringLength(20)]
+        public string ApprovalDate { get; set; }
+
+        [StringLength(7)]
+        public string ApprovalFinal { get; set; }
+
+        [StringLength(20)]
+        public string ApproverOneRequestDate { get; set; }
+
+        [StringLength(20)]
+        public string ApproverTwoRequestDate { get; set; }
+
+        [StringLength(20)]
+        public string ApproverThreeRequestDate { get; set; }
+
+        [StringLength(50)]
+        public string ApprovalSourceSystem { get; set; }
+
+        [StringLength(50)]
+        public string ApprovalObject { get; set; }
+
+        public Guid? idSellerPurchaser { get; set; }
+
+        public Guid? idBudgetResponsible { get; set; }
+        public Guid? IdMigrate { get; set; }
+
+        public Guid? idExecutiveApprover { get; set; }
+
+        [StringLength(12)]
+        public string CostCenterCode { get; set; }
+
+        [StringLength(12)]
+        public string RefCode { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public DateTime? DateUpdated { get; set; }
+        public Guid idClient { get; set; }
+
+    }
+
+    [Table("tAuthority")]
+    public partial class tAuthority : IDataObject
+    {
+        [Key]
+        public Guid Id { get; set; }
+        public Guid idUser { get; set; }
+
+        public Guid? IdMigrate { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public DateTime? DateUpdated { get; set; }
+
+        [Required]
+        public Guid idClient { get; set; }
+
+        
+        [StringLength(7)]
+        public string CostCenter { get; set; }
+
+        [StringLength(12)]
+        public string RefCode { get; set; }
+
+        public int? ApprovalLimit { get; set; }
+        public short? UserRole { get; set; }
+
+    }
+
 
 }

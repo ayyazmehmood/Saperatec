@@ -39,6 +39,20 @@
         {
             // select all cost centers for the current client
             var query = VerumInstance.Context.tCostCenter.Where<tCostCenter>(b => b.idClient == VerumInstance.IdClient).OrderBy(b => b.CostCenterCode);
+            var query_ = VerumInstance.Context.tCostCenter
+.Where(costCenter => costCenter.idClient == VerumInstance.IdClient)
+.OrderBy(costCenter => costCenter.CostCenterCode)
+.Join(
+VerumInstance.Context.tUser,
+costCenter => costCenter.idBudgetResponsible,
+user => user.Id,
+(costCenter, user) => new { CostCenter = costCenter, User = user }
+)
+.Select(joinResult => new
+{
+CostCenterCode = joinResult.CostCenter.CostCenterCode,
+Username = joinResult.User.UserName
+});
             return new BOCollection<CostCenter, tCostCenter>(query);
         }
 

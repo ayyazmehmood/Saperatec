@@ -64,6 +64,8 @@
     <Compile Include="Business Objects\AccountGroup.cs" />
     <Compile Include="Business Objects\AccountMainGroup.cs" />
     <Compile Include="Business Objects\AccountSection.cs" />
+    <Compile Include="Business Objects\Approval.cs" />
+    <Compile Include="Business Objects\Authority.cs" />
     <Compile Include="Business Objects\BookingImport.cs" />
     <Compile Include="Business Objects\BookingRun.cs" />
     <Compile Include="Business Objects\BookRecord.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="CommonModel\LoginModel.cs" />
     <Compile Include="CommonModel\RunningClientModel.cs" />
     <Compile Include="CommonModel\UpdateInsertTranReqModel.cs" />
+    <Compile Include="CommonModel\UpdateProfileModel.cs" />
     <Compile Include="Data Model\BaseClasses.cs" />
     <Compile Include="Data Model\BusinessTypes.cs" />
     <Compile Include="Business Objects\PlanElementContract.cs" />

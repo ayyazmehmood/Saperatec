@@ -30,8 +30,8 @@ namespace VerumBusinessObjects.Framework
 		Guid? IdMigrate { get; set; }
 	}
 
-	public class BusinessObject<T> : INotifyPropertyChanged, IBusinessObject<T> where T : class, IDataObject 
-	{
+    public class BusinessObject<T> : INotifyPropertyChanged, IBusinessObject<T> where T : class, IDataObject
+    {
 		internal VerumDBContext _db = VerumInstance.Context;
 
 		internal T _data;
@@ -272,6 +272,7 @@ namespace VerumBusinessObjects.Framework
 			}
 		}
     }
+
 
 	[ComVisible(false)]
     public class BOCollection<BO, T> : IEnumerator<BO> where BO : IBusinessObject<T>, new()

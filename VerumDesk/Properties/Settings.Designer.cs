@@ -25,9 +25,9 @@ namespace VerumDesk.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=VerumTest;Persis" +
-            "t Security Info=False;User ID=azureadmin;Password=U327Shns\r\n;MultipleActiveResul" +
-            "tSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=tcp:saperatec01.database.windows.net,1433;Initial Catalog=verum;Persist Se" +
+            "curity Info=False;User ID=azureadmin;Password=U327Shns\r\n;MultipleActiveResultSet" +
+            "s=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")]
         public string DBConnectionTest {
             get {
                 return ((string)(this["DBConnectionTest"]));
@@ -113,8 +113,8 @@ namespace VerumDesk.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source = TECHCOMPILER-67; Initial Catalog = VerumTest; Integrated Security =" +
-            " True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source = TECHCOMPILER-67; Initial Catalog = verum; Integrated Security = Tru" +
+            "e")]
         public string DBConnectionDevelop {
             get {
                 return ((string)(this["DBConnectionDevelop"]));

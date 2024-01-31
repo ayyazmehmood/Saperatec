@@ -6,6 +6,8 @@
     using VerumBusinessObjects.Framework;
     using System.ComponentModel.DataAnnotations;
     using System.Security.Cryptography;
+    using DocumentFormat.OpenXml.EMMA;
+    using VerumBusinessObjects.CommonModel;
 
     /// <summary>
     /// Specifies currencies and enables the conversion of foreign currency into the client base currency
@@ -55,6 +57,7 @@
         public BOResult SetPassword(string pwd)
         {
             try
+
             {
                 // Check that admin session is logged on
                 // if (VerumInstance.TypeCurrentUser != TypeUserEnum.Admin) return BOResult.UserNotAuthorized;
@@ -111,6 +114,57 @@
                 BOUtilities.TraceErrors(ex, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return BOResult.GeneralError;
             }
+        }
+
+        public string UpdateProfile(tUser user , UpdateProfileModel model)
+        {
+
+                try
+                {
+                
+                // Check that admin session is logged on
+                // if (VerumInstance.TypeCurrentUser != TypeUserEnum.Admin) return BOResult.UserNotAuthorized;
+
+                // ensure that credentials are not empty
+                if (user.UserName == "" || user.UserName.Length < 6 || model.NewPassword.Length < 8) return "UserCreateFailed";
+
+                    // ensure that client exists
+                    var query = VerumInstance.Context.tClient.Where(b => b.Id == user.idClientDefault);
+                    if (query.Count() == 0) throw new Exception(Properties.Errors.ClientInvalidClientID);
+
+
+                    // Create the salt value with a cryptographic PRNG
+                    byte[] salt;
+                    new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+
+                    // Create the Rfc2898DeriveBytes and get the hash value
+                    var pbkdf2 = new Rfc2898DeriveBytes(model.NewPassword, salt, 10000);
+                    byte[] hash = pbkdf2.GetBytes(20);
+
+                    // Combine the salt and password bytes for later use
+                    byte[] hashBytes = new byte[36];
+                    Array.Copy(salt, 0, hashBytes, 0, 16);
+                    Array.Copy(hash, 0, hashBytes, 16, 20);
+
+                    // Turn the combined salt+hash into a string for storage
+                    string savedPasswordHash = Convert.ToBase64String(hashBytes);
+
+                    user.UserPasswordHash = savedPasswordHash;
+                    _db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                    bool force = false;
+                    VerumInstance.SaveChanges(force);
+                    return "Profile update Successful";
+                }
+
+                catch (Exception ex)
+                {
+                    BOUtilities.TraceErrors(ex, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    return "Profile update Failed";
+                }
+            
+
+
+         
         }
     }
 }

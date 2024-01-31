@@ -12,6 +12,7 @@ namespace VerumBusinessObjects
 	using System.Data.Entity.Spatial;
 	using VerumBusinessObjects.Framework;
 	using System.Runtime.InteropServices;
+    using VerumBusinessObjects.Views;
 
 	public partial interface ICurrency
 	{
@@ -10328,6 +10329,964 @@ namespace VerumBusinessObjects
 		partial void _DescriptionValid( string value, ref bool valid);
 
 	}
+
+    public partial interface IApproval
+    {
+         Guid idClient { get; set; }
+        string IdString { get; set; }
+        DateTime DateCreated { get; set; }
+        DateTime DateUpdated { get; set; }
+    
+        string ApproverOneEmail { get; set; }
+
+         string ApproverOneStatus { get; set; }
+
+         string ApproverOneNote { get; set; }
+
+    
+         string ApproverOneTime { get; set; }
+
+    
+         string ApproverTwoEmail { get; set; }
+
+       
+         string ApproverTwoStatus { get; set; }
+
+         string ApproverTwoNote { get; set; }
+
+       
+         string ApproverTwoTime { get; set; }
+
+        
+         string ApproverThreeEmail { get; set; }
+
+        
+         string ApproverThreeStatus { get; set; }
+
+         string ApproverThreeNote { get; set; }
+
+       
+         string ApproverThreeTime { get; set; }
+
+         string ApproverItemLink { get; set; }
+
+        
+         string DocumentNumber { get; set; }
+
+         double? ApprovalAmount { get; set; }
+
+       
+         string ApprovalDate { get; set; }
+
+       
+         string ApprovalFinal { get; set; }
+
+        
+         string ApproverOneRequestDate { get; set; }
+
+        
+         string ApproverTwoRequestDate { get; set; }
+
+        
+         string ApproverThreeRequestDate { get; set; }
+
+       
+         string ApprovalSourceSystem { get; set; }
+
+        
+         string ApprovalObject { get; set; }
+
+         Guid? idSellerPurchaser { get; set; }
+
+         Guid? idBudgetResponsible { get; set; }
+
+         Guid? idExecutiveApprover { get; set; }
+
+
+        string CostCenterCode { get; set; }
+         string RefCode { get; set; }
+
+    }
+    public partial class Approval : BusinessObject<tApproval>, IApproval
+    {
+        public Approval() : base() { }
+        public Approval(Guid id) : base(id) { }
+
+        public Guid? idSellerPurchaser
+        {
+            get => _data.idSellerPurchaser.GetValueOrDefault();
+            set
+            {
+                if (_data.idSellerPurchaser == value) return;
+                if (value == Guid.Empty) value = null;
+
+                bool valid = true;
+                _idSellerPurchaserValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.idSellerPurchaser = value;
+                    idSellerPurchaser = null;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+		public Guid idClient
+		{
+			get => _data.idClient;
+			set
+			{
+				if (_data.idClient == value) return;
+				bool valid = true;
+				_idClientValid(value, ref valid);
+
+				if (valid)
+				{
+					_data.idClient = value;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _idClientValid(Guid value, ref bool valid);
+
+		partial void _idSellerPurchaserValid(Guid? value, ref bool valid);
+        public Guid? idBudgetResponsible
+        {
+            get => _data.idBudgetResponsible.GetValueOrDefault();
+            set
+            {
+                if (_data.idBudgetResponsible == value) return;
+                if (value == Guid.Empty) value = null;
+
+                bool valid = true;
+                _idBudgetResponsibleValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.idBudgetResponsible = value;
+                    idBudgetResponsible = null;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _idBudgetResponsibleValid(Guid? value, ref bool valid);
+        public Guid? idExecutiveApprover
+        {
+            get => _data.idExecutiveApprover.GetValueOrDefault();
+            set
+            {
+                if (_data.idExecutiveApprover == value) return;
+                if (value == Guid.Empty) value = null;
+
+                bool valid = true;
+                _idExecutiveApproverValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.idBudgetResponsible = value;
+                    idExecutiveApprover = null;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _idExecutiveApproverValid(Guid? value, ref bool valid);
+        public string CostCenterCode
+        {
+            get => _data.CostCenterCode;
+            set
+            {
+                if (_data.CostCenterCode == value) return;
+                bool valid = true;
+                _CostCenterValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("CostCenterCode").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.CostCenterCode = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _CostCenterValid(string value, ref bool valid);
+
+        public string RefCode
+        {
+            get => _data.RefCode;
+            set
+            {
+                if (_data.RefCode == value) return;
+                bool valid = true;
+                _RefCodeValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("RefCode").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.RefCode = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _RefCodeValid(string value, ref bool valid);
+
+        public string ApprovalObject
+        {
+            get => _data.ApprovalObject;
+            set
+            {
+                if (_data.ApprovalObject == value) return;
+                bool valid = true;
+                _ApprovalObjectValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApprovalObject").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApprovalObject = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApprovalObjectValid(string value, ref bool valid);
+
+        public string ApprovalSourceSystem
+        {
+            get => _data.ApprovalSourceSystem;
+            set
+            {
+                if (_data.ApprovalSourceSystem == value) return;
+                bool valid = true;
+                _ApprovalSourceSystemValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApprovalSourceSystem").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApprovalSourceSystem = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApprovalSourceSystemValid(string value, ref bool valid);
+        public string ApproverTwoRequestDate
+        {
+            get => _data.ApproverThreeRequestDate;
+            set
+            {
+                if (_data.ApproverThreeRequestDate == value) return;
+                bool valid = true;
+                _ApproverTwoRequestDateValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverTwoRequestDate").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverTwoRequestDate = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverTwoRequestDateValid(string value, ref bool valid);
+        public string ApproverThreeRequestDate
+        {
+            get => _data.ApproverThreeRequestDate;
+            set
+            {
+                if (_data.ApproverThreeRequestDate == value) return;
+                bool valid = true;
+                _ApproverThreeRequestDateValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverThreeRequestDate").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApprovalSourceSystem = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverThreeRequestDateValid(string value, ref bool valid);
+        public string ApproverOneRequestDate
+        {
+            get => _data.ApproverOneRequestDate;
+            set
+            {
+                if (_data.ApproverOneRequestDate == value) return;
+                bool valid = true;
+                _ApproverOneRequestDateValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverOneRequestDate").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverOneRequestDate = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverOneRequestDateValid(string value, ref bool valid);
+        public string ApprovalFinal
+        {
+            get => _data.ApprovalFinal;
+            set
+            {
+                if (_data.ApprovalFinal == value) return;
+                bool valid = true;
+                _ApprovalFinalValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApprovalFinal").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApprovalFinal = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApprovalFinalValid(string value, ref bool valid);
+        public string ApprovalDate
+        {
+            get => _data.ApprovalDate;
+            set
+            {
+                if (_data.ApprovalDate == value) return;
+                bool valid = true;
+                _ApprovalDatelValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApprovalDate").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApprovalDate = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApprovalDatelValid(string value, ref bool valid);
+        public string DocumentNumber
+        {
+            get => _data.DocumentNumber;
+            set
+            {
+                if (_data.DocumentNumber == value) return;
+                bool valid = true;
+                _DocumentNumberValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("DocumentNumber").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.DocumentNumber = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _DocumentNumberValid(string value, ref bool valid);
+        public string ApproverItemLink
+        {
+            get => _data.ApproverItemLink;
+            set
+            {
+                if (_data.ApproverItemLink == value) return;
+                bool valid = true;
+                _ApproverItemLinkValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverItemLink").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverItemLink = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverItemLinkValid(string value, ref bool valid);
+        public string ApproverThreeTime
+        {
+            get => _data.ApproverThreeTime;
+            set
+            {
+                if (_data.ApproverThreeTime == value) return;
+                bool valid = true;
+                _ApproverThreeTimeValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverThreeTime").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverThreeTime = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverThreeTimeValid(string value, ref bool valid);
+        public string ApproverThreeNote
+        {
+            get => _data.ApproverThreeNote;
+            set
+            {
+                if (_data.ApproverThreeNote == value) return;
+                bool valid = true;
+                _ApproverThreeNoteValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverThreeNote").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverThreeNote = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverThreeNoteValid(string value, ref bool valid);
+        public string ApproverThreeStatus
+        {
+            get => _data.ApproverThreeStatus;
+            set
+            {
+                if (_data.ApproverThreeStatus == value) return;
+                bool valid = true;
+                _ApproverThreeStatusValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverThreeStatus").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverThreeStatus = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverThreeStatusValid(string value, ref bool valid);
+        public string ApproverThreeEmail
+        {
+            get => _data.ApproverThreeEmail;
+            set
+            {
+                if (_data.ApproverThreeEmail == value) return;
+                bool valid = true;
+                _ApproverThreeEmailValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverThreeEmail").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverThreeEmail = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverThreeEmailValid(string value, ref bool valid);
+        public string ApproverTwoTime
+        {
+            get => _data.ApproverTwoTime;
+            set
+            {
+                if (_data.ApproverTwoTime == value) return;
+                bool valid = true;
+                _ApproverTwoTimeValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverTwoTime").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverTwoTime = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverTwoTimeValid(string value, ref bool valid);
+        public string ApproverTwoNote
+        {
+            get => _data.ApproverTwoNote;
+            set
+            {
+                if (_data.ApproverTwoNote == value) return;
+                bool valid = true;
+                _ApproverTwoNoteValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverTwoNote").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverTwoNote = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverTwoNoteValid(string value, ref bool valid);
+        public string ApproverTwoStatus
+        {
+            get => _data.ApproverTwoStatus;
+            set
+            {
+                if (_data.ApproverTwoStatus == value) return;
+                bool valid = true;
+                _ApproverTwoStatusValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverTwoStatus").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverTwoStatus = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverTwoStatusValid(string value, ref bool valid);
+        public string ApproverTwoEmail
+        {
+            get => _data.ApproverTwoEmail;
+            set
+            {
+                if (_data.ApproverTwoEmail == value) return;
+                bool valid = true;
+                _ApproverTwoEmailValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverTwoEmail").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverTwoEmail = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverTwoEmailValid(string value, ref bool valid);
+        public string ApproverOneTime
+        {
+            get => _data.ApproverOneTime;
+            set
+            {
+                if (_data.ApproverOneTime == value) return;
+                bool valid = true;
+                _ApproverOneTimeValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverOneTime").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverOneTime = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverOneTimeValid(string value, ref bool valid);
+        public string ApproverOneNote
+        {
+            get => _data.ApproverOneNote;
+            set
+            {
+                if (_data.ApproverOneNote == value) return;
+                bool valid = true;
+                _ApproverOneNoteValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverOneNote").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverOneNote = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverOneNoteValid(string value, ref bool valid);
+        public string ApproverOneStatus
+        {
+            get => _data.ApproverOneStatus;
+            set
+            {
+                if (_data.ApproverOneStatus == value) return;
+                bool valid = true;
+                _ApproverOneStatusValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverOneStatus").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverOneStatus = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverOneStatusValid(string value, ref bool valid);
+        public string ApproverOneEmail
+        {
+            get => _data.ApproverOneEmail;
+            set
+            {
+                if (_data.ApproverOneEmail == value) return;
+                bool valid = true;
+                _ApproverOneEmailValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("ApproverOneEmail").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.ApproverOneEmail = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+        partial void _ApproverOneEmailValid(string value, ref bool valid);
+
+        public double? ApprovalAmount
+        {
+            get => _data.ApprovalAmount.GetValueOrDefault();
+            set
+            {
+                if (_data.ApprovalAmount == value) return;
+                bool valid = true;
+                _ApprovalAmountValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.ApprovalAmount = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _ApprovalAmountValid( double? value, ref bool valid);
+
+    }
+
+    public partial interface IAuthority
+    {
+        string IdString { get; set; }
+        Guid IdMigrate { get; set; }
+        Guid idUser { get; set; }
+        DateTime DateCreated { get; set; }
+        DateTime DateUpdated { get; set; }
+        Guid idClient { get; set; }
+        Client ClientParent { get; set; }
+        string CostCenter { get; set; }
+        int? ApprovalLimit { get; set; }
+        string RefCode { get; set; }
+        short? UserRole { get; set; }
+
+    }
+	public partial class Authority : BusinessObject<tAuthority>, IAuthority
+	{
+		public Authority() : base() { }
+		public Authority(Guid id) : base(id) { }
+		public Guid idClient
+		{
+			get => _data.idClient;
+			set
+			{
+				if (_data.idClient == value) return;
+				bool valid = true;
+				_idClientValid(value, ref valid);
+
+				if (valid)
+				{
+					_data.idClient = value;
+					_Client = null;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _idClientValid(Guid value, ref bool valid);
+		public Guid idUser
+        {
+			get => _data.idUser;
+			set
+			{
+				if (_data.idUser == value) return;
+				bool valid = true;
+                _idUserValid(value, ref valid);
+
+				if (valid)
+				{
+					_data.idUser = value;
+                    _Client = null;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _idUserValid(Guid value, ref bool valid);
+
+		private Client _Client;
+
+		public Client ClientParent
+		{
+			get
+			{
+				if (_Client == null || _Client.data == null)
+				{
+					_Client = new Client();
+					_Client.Id = _data.idClient;
+					return _Client;
+				}
+				else return _Client;
+			}
+			set
+			{
+				_Client = value;
+				idClient = _Client.Id;
+			}
+		}
+
+		public string CostCenter
+		{
+			get => _data.CostCenter;
+			set
+			{
+				if (_data.CostCenter == value) return;
+				bool valid = true;
+				_CostCenterValid(value, ref valid);
+
+				if (valid)
+				{
+					if (value != null)
+					{
+						var attr = (StringLengthAttribute)_data.GetType().GetProperty("CostCenter").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+						if (value.Length > attr.MaximumLength)
+							value = value.Substring(0, attr.MaximumLength);
+					}
+					_data.CostCenter = value;
+					_changed = true;
+					NotifyPropertyChanged();
+				}
+				else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+			}
+		}
+
+		partial void _CostCenterValid(string value, ref bool valid);
+
+        public string RefCode
+        {
+            get => _data.RefCode;
+            set
+            {
+                if (_data.CostCenter == value) return;
+                bool valid = true;
+                _RefCodeValid(value, ref valid);
+
+                if (valid)
+                {
+                    if (value != null)
+                    {
+                        var attr = (StringLengthAttribute)_data.GetType().GetProperty("RefCode").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+                        if (value.Length > attr.MaximumLength)
+                            value = value.Substring(0, attr.MaximumLength);
+                    }
+                    _data.RefCode = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _RefCodeValid(string value, ref bool valid);
+
+        public int? ApprovalLimit
+        {
+            get => _data.ApprovalLimit.GetValueOrDefault();
+            set
+            {
+                if (_data.ApprovalLimit == value) return;
+                bool valid = true;
+                _ApprovalLimitValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.ApprovalLimit = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _ApprovalLimitValid(int? value, ref bool valid);
+
+        public short? UserRole
+        {
+            get => _data.UserRole.GetValueOrDefault();
+            set
+            {
+                if (_data.UserRole == value) return;
+                bool valid = true;
+                _UserRoleValid(value, ref valid);
+
+                if (valid)
+                {
+                    _data.ApprovalLimit = value;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _UserRoleValid(int? value, ref bool valid);
+
+
+
+    }
+
 
 
 }

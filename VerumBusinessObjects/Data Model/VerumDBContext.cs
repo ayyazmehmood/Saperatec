@@ -85,6 +85,8 @@ namespace VerumBusinessObjects
 		public virtual DbSet<tBookRecord> tBookRecord { get; set; }
 
 		public virtual DbSet<tBookTransaction> tBookTransaction { get; set; }
+		public virtual DbSet<tAuthority> tAuthority { get; set; }
+		public virtual DbSet<tApproval> tApproval { get; set; }
 
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)

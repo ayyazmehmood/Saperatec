@@ -130,6 +130,7 @@ namespace VerumAPI.ApiController
                 obj.idUser = item.idUser;
                 obj.IdMigrate = item.IdMigrate;
                 obj.UserRole = item.UserRole;
+                obj.RefCode = item.RefCode;
 
                 authoritylist.Add(obj);
             }
@@ -141,7 +142,7 @@ namespace VerumAPI.ApiController
 
         [HttpPost(Name = "AddtAuthority")]
         [EnableCors("AllowAll")]
-        public string AddtAuthority(tAuthority model)
+        public string AddtAuthority(AuthorityModel model)
         {
             Authority Authority_ = new Authority();
             tAuthority authorityDb = new tAuthority();
@@ -151,10 +152,10 @@ namespace VerumAPI.ApiController
             authorityDb.CostCenter = model.CostCenter;
             authorityDb.DateUpdated = DateTime.UtcNow;
             authorityDb.idClient = VerumInstance.IdClient;
+            authorityDb.idUser = VerumInstance.User.Id;
+            authorityDb.IdMigrate = VerumInstance.User.IdMigrate;
             authorityDb.RefCode = model.RefCode;
-            authorityDb.idUser = model.idUser;
             authorityDb.ApprovalLimit = model.ApprovalLimit;
-            authorityDb.IdMigrate = model.IdMigrate;
             authorityDb.UserRole = model.UserRole;
             return Authority_.AddAuthority(authorityDb);
 
@@ -171,6 +172,7 @@ namespace VerumAPI.ApiController
             authorityDb.UserRole= model.UserRole;
             authorityDb.ApprovalLimit= model.ApprovalLimit;
             authorityDb.IdMigrate = model.IdMigrate;
+            authorityDb.RefCode= model.RefCode;
             authorityDb.DateUpdated = DateTime.UtcNow;
             return authority.UpdatetAuthority(authorityDb);
 

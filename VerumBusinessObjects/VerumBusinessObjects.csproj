@@ -99,6 +99,7 @@
     <Compile Include="Business Objects\VATRule.cs" />
     <Compile Include="CommonModel\AccountCodeModel.cs" />
     <Compile Include="CommonModel\ApiResponse.cs" />
+    <Compile Include="CommonModel\AuthorityModel.cs" />
     <Compile Include="CommonModel\CostCenterModel.cs" />
     <Compile Include="CommonModel\GeneralLedgerPageResModel.cs" />
     <Compile Include="CommonModel\GLEntriesResModel.cs" />

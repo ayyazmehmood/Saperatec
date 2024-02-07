@@ -18,12 +18,9 @@ import AddCostCenter from '../CostCenter/AddCostCenter'
 import AddAuthority from '../CostCenter/AddAuthority'
 import ViewAuthorityTableData from '../Utility/ViewAuthorityTableData'
 import ViewApprovalTableData from '../Approval/ViewApprovalTableData'
-import { abc, bca } from '../apiService/costcenterService'
-import httpRequest from '../httpService/http.request';
 
 
 export default function SqlTables() {
-  const httpReq=new httpRequest()
   const [Id, setId] = useState([])
   const [Costcenterdata, setCostcenterdata] = useState([])
   const [Authoritydata, setAuthoritydata] = useState([])
@@ -34,13 +31,12 @@ export default function SqlTables() {
   const [IsCostView, setIsCostView] = useState(false);
   const [IsAuthView, setIsAuthView] = useState(false);
   const [IsApprovalView, setApprovalView] = useState(false);
-  const [IsAddNewCost, setIsAddNewCost] = useState(false);
-  const [IsAddNewAuth, setIsAddNewAuth] = useState(false);
+  const [IsAddNew, setIsAddNew] = useState(false);
   const [triggercost, settriggercost] = useState(false);
   const [triggercostadd, settriggercostadd] = useState(false);
   const [triggerapproval, settriggerapproval] = useState(false);
-  const [triggerapprovaladd, settriggerapprovaladd] = useState(false);
   const [triggerauth, settriggerauth] = useState(false);
+  const [trigger, settrigger] = useState(false);
   const [currentPageCostCenter, setCurrentPageCostCenter] = useState(1);
   const [currentPageAuth, setCurrentPageAuth] = useState(1);
   const [currentPageApproval, setCurrentPageApproval] = useState(1);
@@ -48,58 +44,27 @@ export default function SqlTables() {
 
   const toast = useToast();
   const fetchTablesData = async () => {
-    try {
-      const rescostcenter = await httpReq.get('GetTcostcenterTable');
-      setCostcenterdata(rescostcenter.data);
-    } catch (error) {
-      toast({
-        title: "something Went Wrong",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
-    try {
-      const resauthority = await httpReq.get('GetTAuthority');
-      setAuthoritydata(resauthority.data);
+    const rescostcenter = await axios.get('https://localhost:7226/Tables/GetTcostcenterTable');
+    setCostcenterdata(rescostcenter.data);
 
-    } catch (error) {
-      toast({
-        title: "something Went Wrong",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
+    const resauthority = await axios.get('https://localhost:7226/Tables/GetTAuthority');
+    setAuthoritydata(resauthority.data);
 
-    try {
-      const resapproval = await httpReq.get('GetTApproval');
-      setApprovaldata(resapproval.data);
-
-    } catch (error) {
-      toast({
-        title: "something Went Wrong",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
+    const resapproval = await axios.get('https://localhost:7226/Tables/GetTApproval');
+    setApprovaldata(resapproval.data);
   }
   useEffect(() => {
     fetchTablesData();
   }, [])
 
   const AddCostRowHandler = () => {
-    setIsAddNewCost(true);
+    setIsAddNew(true);
     settriggercostadd(!triggercostadd);
   }
 
   const AddAuthRowHandler = () => {
-    setIsAddNewAuth(true);
-    settriggerapprovaladd(!triggerapprovaladd);
+    setIsAddNew(true);
+    settriggerauth(!triggerauth);
   }
 
   const clickcostcenterhandler = (item) => {
@@ -110,31 +75,20 @@ export default function SqlTables() {
 
   const deletecostcenterhandler = async (item) => {
     const Id = item.id;
-    try {
-      const res = await httpReq.post(`DeleteTCostCenter`, { Id });
-      if (res.status == 200) {
-        toast({
-          title: res.data,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
-        fetchTablesData();
-      }
-      else {
-        toast({
-          title: "Something Went Wrong",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
-      }
 
-    } catch (error) {
+    const res = await axios.post(`https://localhost:7226/Tables/DeleteTCostCenter`, { Id });
+    if (res.status == 200) {
       toast({
-        title: "something Went Wrong",
+        title: res.data,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    else {
+      toast({
+        title: "Something Went Wrong",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -150,44 +104,13 @@ export default function SqlTables() {
   }
 
   const deleteauthhandler = async (item) => {
-    try {
-      const Id = item.id;
-      const res = await httpReq.post(`DeletetAuthority`, { Id });   
-      if (res.status == 200) {
-        toast({
-          title: res.data,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
-        fetchTablesData();
-      }
-      else {
-        toast({
-          title: "Something Went Wrong",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
-      } 
-    } catch (error) {
-      toast({
-        title: "something Went Wrong",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
-
+    const Id = item.id;
+    const res = await axios.post(`https://localhost:7226/Tables/DeletetAuthority`, { Id });
   }
 
   const clickapprovalhandler = (item) => {
     setApprovalView(true);
     SetCurrentApprovalItem(item);
-    settriggerapproval(!triggerapproval);
   }
 
   const indexOfLastItemCostCenter = currentPageCostCenter * itemsPerPage;
@@ -219,8 +142,8 @@ export default function SqlTables() {
         <TabPanels>
           <TabPanel>
             <TableContainer>
-              <Table variant='simple'>
-                <TableCaption><Button onClick={() => { AddCostRowHandler(triggercostadd) }}>Add</Button></TableCaption>
+              <Table variant='striped ' colorScheme='teal'>
+                <TableCaption><Button onClick={() => { AddCostRowHandler() }}>Add Cost Center</Button></TableCaption>
                 <Thead>
                   <Tr>
                     <Th>Schlussel</Th>
@@ -228,6 +151,8 @@ export default function SqlTables() {
                     <Th>Titel englisch</Th>
                     <Th >Kostentrager</Th>
                     <Th >Beschreibung</Th>
+                    <Th >BudgetResponsible</Th>
+                    <Th >ExecutiveApprover</Th>
                     <Th >View</Th>
                     <Th >Delete</Th>
                   </Tr>
@@ -240,34 +165,44 @@ export default function SqlTables() {
                       <Td>{item.titleEnglishCostCenter ? item.titleEnglishCostCenter.slice(0, 20) + '...' : ''}</Td>
                       <Td >{item.flagProfitCenter ? 'true' : 'false'}</Td>
                       <Td>{item.descriptionCostCenter ? item.descriptionCostCenter.slice(0, 20) + '...' : ''}</Td>
+                      <Td>{item.idBudgetResponsibleUserName}</Td>
+                      <Td>{item.idExecutiveApproverUserName}</Td>
                       <Td><Button onClick={() => { clickcostcenterhandler(item, triggercost) }} >View</Button></Td>
                       <Td><DeleteIcon onClick={() => { deletecostcenterhandler(item) }} style={{ cursor: 'pointer' }} /></Td>
                     </Tr>
                   )}
+
                 </Tbody>
               </Table>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                {Array.from({ length: Math.ceil(Costcenterdata.length / itemsPerPage) }, (_, i) => (
-                  <Button style={currentPageCostCenter==(i+1)?{background:'gray'}:{}} key={i + 1} onClick={() => paginatecost(i + 1)} margin={1}>
-                    {i + 1}
-                  </Button>
-                ))}
+              <div >
+                <div>
+                  {Array.from({ length: Math.ceil(Costcenterdata.length / itemsPerPage) }, (_, i) => (
+                    <Button
+                      key={i + 1}
+                      onClick={() => paginatecost(i + 1)}
+                      style={{ backgroundColor: currentPageCostCenter === i + 1 ? '#007bff' : 'transparent', color: currentPageCostCenter === i + 1 ? 'white' : 'black' }}
+                      margin={1}
+                    >
+                      {i + 1}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </TableContainer>
             {IsCostView && <ViewCostCenterTableData triggercost={triggercost} CurrentCostCenterItem={CurrentCostCenterItem} />}
-            {IsAddNewCost && <AddCostCenter triggercost={triggercostadd} />}
+            {IsAddNew && <AddCostCenter triggercost={triggercostadd} />}
           </TabPanel>
           <TabPanel>
             <TableContainer>
-              <Table variant='simple'>
-                <TableCaption><Button onClick={() => { AddAuthRowHandler(triggerapprovaladd) }}>Add Authority</Button></TableCaption>
+              <Table variant='striped ' colorScheme='teal'>
+                <TableCaption><Button onClick={() => { AddAuthRowHandler() }}>Add Authority</Button></TableCaption>
                 <Thead>
 
                   <Tr>
                     <Th>Cost Center</Th>
                     <Th>User Role</Th>
                     <Th>Apporaval Limit</Th>
-                    <Th>Ref Code</Th>
+                    <Th>UserName</Th>
                     <Th >View</Th>
                     <Th >Delete</Th>
                   </Tr>
@@ -278,8 +213,8 @@ export default function SqlTables() {
                       <Td>{item.costCenter}</Td>
                       <Td>{item.userRole}</Td>
                       <Td>{item.approvalLimit}</Td>
-                      <Td>{item.refCode ? item.refCode : '-'}</Td>
-                      <Td><Button onClick={() => { clickauthhandler(item, triggerauth) }} >View</Button></Td>
+                      <Td>{item.userName}</Td>
+                      <Td><Button onClick={() => { clickauthhandler(item, trigger) }} >View</Button></Td>
                       <Td><DeleteIcon onClick={() => { deleteauthhandler(item) }} style={{ cursor: 'pointer' }} /></Td>
                     </Tr>
                   )}
@@ -287,20 +222,22 @@ export default function SqlTables() {
                 </Tbody>
 
               </Table>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div>
                 {Array.from({ length: Math.ceil(Authoritydata.length / itemsPerPage) }, (_, i) => (
-                  <Button style={currentPageAuth==(i+1)?{background:'gray'}:{}} key={i + 1} onClick={() => paginateauth(i + 1)} margin={1}>
+                  <Button key={i + 1} onClick={() => paginateauth(i + 1)} margin={1}
+                  style={{ backgroundColor: currentPageAuth === i + 1 ? '#007bff' : 'transparent', color: currentPageAuth === i + 1 ? 'white' : 'black' }}
+                  >
                     {i + 1}
                   </Button>
                 ))}
               </div>
             </TableContainer>
-            {IsAuthView && <ViewAuthorityTableData triggerauth={triggerauth} CurrentAuthItem={CurrentAuthItem} Onupdate={fetchTablesData} />}
-            {IsAddNewAuth && <AddAuthority triggerauthadd={triggerapprovaladd} Onadd={fetchTablesData} />}
+            {IsAuthView && <ViewAuthorityTableData triggerauth={triggerauth} CurrentAuthItem={CurrentAuthItem} />}
+            {IsAddNew && <AddAuthority triggerauth={triggerauth} />}
           </TabPanel>
           <TabPanel>
             <TableContainer>
-              <Table variant='simple'>
+              <Table variant='striped ' colorScheme='teal'>
                 <Thead>
                   <Tr>
                     <Th >Ref Code</Th>
@@ -323,22 +260,24 @@ export default function SqlTables() {
                       <Td>{item.documentNumber}</Td>
                       <Td>{item.approvalAmount}</Td>
                       <Td>{item.approvalFinal}</Td>
-                      <Td><Button onClick={() => { clickapprovalhandler(item, triggerapproval) }} >View</Button></Td>
+                      <Td><Button onClick={() => { clickapprovalhandler(item, triggerauth) }} >View</Button></Td>
                     </Tr>
                   )}
 
                 </Tbody>
 
               </Table>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div>
                 {Array.from({ length: Math.ceil(Approvaldata.length / itemsPerPage) }, (_, i) => (
-                  <Button style={currentPageApproval==(i+1)?{background:'gray'}:{}} key={i + 1} onClick={() => paginateapproval(i + 1)} margin={1}>
+                  <Button key={i + 1} onClick={() => paginateapproval(i + 1)} margin={1}
+                  style={{ backgroundColor: currentPageApproval === i + 1 ? '#007bff' : 'transparent', color: currentPageApproval === i + 1 ? 'white' : 'black' }}
+                  >
                     {i + 1}
                   </Button>
                 ))}
               </div>
             </TableContainer>
-            {IsApprovalView && <ViewApprovalTableData CurrentApprovalItem={CurrentApprovalItem} ModalTitle={"Approval"} trigger={triggerapproval} />}
+            {IsApprovalView && <ViewApprovalTableData CurrentApprovalItem={CurrentApprovalItem} ModalTitle={"Approval"} trigger={trigger} />}
           </TabPanel>
         </TabPanels>
       </Tabs>

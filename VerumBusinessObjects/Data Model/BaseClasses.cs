@@ -2302,10 +2302,14 @@ namespace VerumBusinessObjects
 		bool FlagProfitCenter { get; set; }
 		[ComVisible(false)]
 		string DescriptionCostCenter { get; set; }
-	}
+        Guid? idBudgetResponsible { get; set; }
+        Guid? idExecutiveApprover { get; set; }
 
 
-	public partial class CostCenter : BusinessObject<tCostCenter>, ICostCenter
+    }
+
+
+    public partial class CostCenter : BusinessObject<tCostCenter>, ICostCenter
 	{
 		public CostCenter() : base() {}
 		public CostCenter(Guid id) : base(id) {}
@@ -2330,8 +2334,50 @@ namespace VerumBusinessObjects
 		}
 
 		partial void _idClientValid( Guid value, ref bool valid);
+        public Guid? idBudgetResponsible
+        {
+            get => _data.idBudgetResponsible;
+            set
+            {
+                if (_data.idClient == value) return;
+                bool valid = true;
+                _idBudgetResponsibleValid((Guid)value, ref valid);
 
-		private Client _Client;
+                if (valid)
+                {
+                    _data.idBudgetResponsible = value;
+                    _Client = null;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _idBudgetResponsibleValid(Guid value, ref bool valid);
+        public Guid? idExecutiveApprover
+        {
+            get => _data.idExecutiveApprover;
+            set
+            {
+                if (_data.idClient == value) return;
+                bool valid = true;
+                _idExecutiveApproverValid((Guid)value, ref valid);
+
+                if (valid)
+                {
+                    _data.idExecutiveApprover = value;
+                    _Client = null;
+                    _changed = true;
+                    NotifyPropertyChanged();
+                }
+                else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+            }
+        }
+
+        partial void _idExecutiveApproverValid(Guid value, ref bool valid);
+
+        private Client _Client;
 
 		public Client ClientParent
 		{
@@ -11117,6 +11163,7 @@ namespace VerumBusinessObjects
         int? ApprovalLimit { get; set; }
         string RefCode { get; set; }
         short? UserRole { get; set; }
+        //string UserName { get; set; }
 
     }
 	public partial class Authority : BusinessObject<tAuthority>, IAuthority
@@ -11214,7 +11261,34 @@ namespace VerumBusinessObjects
 
 		partial void _CostCenterValid(string value, ref bool valid);
 
-        public string RefCode
+		//public string UserName
+		//{
+		//	get => _data.UserName;
+		//	set
+		//	{
+		//		if (_data.UserName == value) return;
+		//		bool valid = true;
+		//		_UserNameValid(value, ref valid);
+
+		//		if (valid)
+		//		{
+		//			if (value != null)
+		//			{
+		//				var attr = (StringLengthAttribute)_data.GetType().GetProperty("UserName").GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault();
+		//				if (value.Length > attr.MaximumLength)
+		//					value = value.Substring(0, attr.MaximumLength);
+		//			}
+		//			_data.UserName = value;
+		//			_changed = true;
+		//			NotifyPropertyChanged();
+		//		}
+		//		else throw new Exception(Properties.Errors.BusinessObjectAssignedInvalidValue);
+		//	}
+		//}
+
+		//partial void _UserNameValid(string value, ref bool valid);
+
+		public string RefCode
         {
             get => _data.RefCode;
             set

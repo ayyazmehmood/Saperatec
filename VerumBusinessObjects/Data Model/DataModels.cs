@@ -408,6 +408,8 @@ namespace VerumBusinessObjects
 
 			public Guid? IdMigrate { get; set; }
             public Guid? idBudgetResponsible { get; set; }
+            public Guid? idExecutiveApprover { get; set; }
+        
 
             public DateTime DateCreated { get; set; }
 
@@ -1565,7 +1567,8 @@ namespace VerumBusinessObjects
         public int? ApprovalLimit { get; set; }
         public short? UserRole { get; set; }
 
-    }
+
+	}
 
 
 }

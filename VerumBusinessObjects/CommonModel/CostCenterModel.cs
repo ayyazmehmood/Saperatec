@@ -12,7 +12,7 @@ namespace VerumBusinessObjects.CommonModel
         public Guid Id { get; set; }
         public Guid IdMigrate { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateUpdated { get; set; }
         public Guid idClient { get; set; }
         public Client ClientParent { get; set; }
         public string CostCenterCode { get; set; }
@@ -22,6 +22,17 @@ namespace VerumBusinessObjects.CommonModel
         public bool FlagProfitCenter { get; set; }
         [ComVisible(false)]
         public string DescriptionCostCenter { get; set; }
+        public string UserName { get; set; }
+        public string idBudgetResponsibleUserName { get; set; }
+        public string idExecutiveApproverUserName { get; set; }
+        public Guid? idBudgetResponsible { get; set; }
+        public Guid? idExecutiveApprover { get; set; }
+
+
+
+
+
+
 
     }
 }

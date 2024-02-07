@@ -35,28 +35,10 @@ namespace VerumAPI.ApiController
 
         public List<CostCenterModel> GetTcostcenterTable()
         {
-            BOColl = CostCenter.GetBOCollection();
-            costCenterList = new List<CostCenterModel>();
 
-            CostCenterModel obj;
-            foreach (var item in BOColl)
-            {
-                obj = new CostCenterModel();
-                obj.Id = item.Id;
-                obj.DateCreated = item.DateCreated;
-                obj.DateUpdated = item.DateUpdated;
-                obj.idClient = item.idClient;
-                obj.CostCenterCode = item.CostCenterCode;
-                obj.TitleCostCenter = item.TitleCostCenter;
-                obj.TitleEnglishCostCenter = item.TitleEnglishCostCenter;
-                obj.FlagProfitCenter = item.FlagProfitCenter;
-                obj.DescriptionCostCenter = item.DescriptionCostCenter;
 
-                costCenterList.Add(obj);
-            }
-
-            return costCenterList;
-
+            List<CostCenterModel> costCenterModels = CostCenter.GetcostcenterDetails();
+            return costCenterModels;
 
         }
 
@@ -112,31 +94,11 @@ namespace VerumAPI.ApiController
 
         [HttpGet(Name = "GetTAuthority")]
 
-        public List<tAuthority> GetTAuthority()
+        public List<AuthorityModel> GetTAuthority()
         {
-            var BOColl = Authority.GetBOCollection();
-            authoritylist =  new List<tAuthority>();
+            List<AuthorityModel> authorityModels = Authority.GetAuthorityDetails();
 
-            tAuthority obj;
-            foreach (var item in BOColl)
-            {
-                obj = new tAuthority();
-                obj.Id = item.Id;
-                obj.DateCreated = item.DateCreated;
-                obj.DateUpdated = item.DateUpdated;
-                obj.idClient = item.idClient;
-                obj.CostCenter = item.CostCenter;
-                obj.ApprovalLimit= item.ApprovalLimit;
-                obj.idUser = item.idUser;
-                obj.IdMigrate = item.IdMigrate;
-                obj.UserRole = item.UserRole;
-                obj.RefCode = item.RefCode;
-
-                authoritylist.Add(obj);
-            }
-
-            return authoritylist;
-
+            return authorityModels;
 
         }
 

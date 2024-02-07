@@ -39,21 +39,53 @@
         {
             // select all cost centers for the current client
             var query = VerumInstance.Context.tCostCenter.Where<tCostCenter>(b => b.idClient == VerumInstance.IdClient).OrderBy(b => b.CostCenterCode);
-            var query_ = VerumInstance.Context.tCostCenter
-.Where(costCenter => costCenter.idClient == VerumInstance.IdClient)
-.OrderBy(costCenter => costCenter.CostCenterCode)
-.Join(
-VerumInstance.Context.tUser,
-costCenter => costCenter.idBudgetResponsible,
-user => user.Id,
-(costCenter, user) => new { CostCenter = costCenter, User = user }
-)
-.Select(joinResult => new
-{
-CostCenterCode = joinResult.CostCenter.CostCenterCode,
-Username = joinResult.User.UserName
-});
+
             return new BOCollection<CostCenter, tCostCenter>(query);
+        }
+        public static List<CostCenterModel> GetcostcenterDetails()
+        {
+
+            List<CostCenterModel> costcenterModel = new List<CostCenterModel>();
+            var query = from costcenter in VerumInstance.Context.tCostCenter
+                        join userBudget in VerumInstance.Context.tUser
+                        on costcenter.idBudgetResponsible equals userBudget.Id into budgetGroup
+                        from userBudget in budgetGroup.DefaultIfEmpty()
+                        join userExecutive in VerumInstance.Context.tUser
+                        on costcenter.idExecutiveApprover equals userExecutive.Id into executiveGroup
+                        from userExecutive in executiveGroup.DefaultIfEmpty()
+                        select new
+                        {
+                            Costcenter = costcenter,
+                            UsernameBudget = userBudget != null ? userBudget.UserName : null,
+                            UsernameExecutive = userExecutive != null ? userExecutive.UserName : null
+                        };
+
+
+
+
+            CostCenterModel costcenterObj = new CostCenterModel();
+            foreach (var item in query)
+            {
+                costcenterObj = new CostCenterModel();
+                costcenterObj.idBudgetResponsibleUserName = item.UsernameBudget;
+                costcenterObj.idExecutiveApproverUserName = item.UsernameExecutive;
+                costcenterObj.Id = item.Costcenter.Id;
+                costcenterObj.DateCreated = item.Costcenter.DateCreated;
+                costcenterObj.DateUpdated = item.Costcenter.DateUpdated;
+                costcenterObj.idClient = item.Costcenter.idClient;
+                costcenterObj.CostCenterCode = item.Costcenter.CostCenterCode;
+                costcenterObj.TitleCostCenter = item.Costcenter.TitleCostCenter;
+                costcenterObj.TitleEnglishCostCenter = item.Costcenter.TitleEnglishCostCenter;
+                costcenterObj.FlagProfitCenter = item.Costcenter.FlagProfitCenter;
+                costcenterObj.DescriptionCostCenter = item.Costcenter.DescriptionCostCenter;
+                costcenterObj.idBudgetResponsible = item.Costcenter.idBudgetResponsible;
+                costcenterObj.idExecutiveApprover = item.Costcenter.idExecutiveApprover;
+
+
+                costcenterModel.Add(costcenterObj);
+            }
+
+            return costcenterModel;
         }
 
         public static bool CheckKeyExists(string code)
